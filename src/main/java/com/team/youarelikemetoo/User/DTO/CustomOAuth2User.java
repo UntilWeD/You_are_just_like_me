@@ -1,6 +1,5 @@
 package com.team.youarelikemetoo.User.DTO;
 
-import com.team.youarelikemetoo.User.Service.CustomOAuth2UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
