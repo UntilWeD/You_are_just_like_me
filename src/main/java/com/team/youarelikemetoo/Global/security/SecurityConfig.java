@@ -3,7 +3,7 @@ package com.team.youarelikemetoo.Global.security;
 
 import com.team.youarelikemetoo.Global.JWT.JWTFilter;
 import com.team.youarelikemetoo.Global.JWT.JWTUtil;
-import com.team.youarelikemetoo.User.Auth.CustomSuccessHandler;
+import com.team.youarelikemetoo.Auth.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

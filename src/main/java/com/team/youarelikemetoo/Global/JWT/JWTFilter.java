@@ -1,6 +1,6 @@
 package com.team.youarelikemetoo.Global.JWT;
 
-import com.team.youarelikemetoo.User.DTO.CustomOAuth2User;
+import com.team.youarelikemetoo.Auth.DTO.CustomOAuth2User;
 import com.team.youarelikemetoo.User.DTO.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -60,13 +60,14 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰에서 username, role 획득
-        String username = jwtUtil.getUsername(token);
+        String name = jwtUtil.getName(token);
         String role = jwtUtil.getRole(token);
 
         // UserDTO를 생성하여 값 set
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(username);
-        userDTO.setRole(role);
+        UserDTO userDTO = UserDTO.builder()
+                .name(name)
+                .role(role)
+                .build();
 
         //UserDetails에 회원 정보 객체 담기
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);

@@ -1,7 +1,7 @@
-package com.team.youarelikemetoo.User.Auth;
+package com.team.youarelikemetoo.Auth;
 
 import com.team.youarelikemetoo.Global.JWT.JWTUtil;
-import com.team.youarelikemetoo.User.DTO.CustomOAuth2User;
+import com.team.youarelikemetoo.Auth.DTO.CustomOAuth2User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

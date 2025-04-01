@@ -1,4 +1,4 @@
-package com.team.youarelikemetoo.User.DTO;
+package com.team.youarelikemetoo.Auth.DTO;
 
 public interface OAuth2Response {
 

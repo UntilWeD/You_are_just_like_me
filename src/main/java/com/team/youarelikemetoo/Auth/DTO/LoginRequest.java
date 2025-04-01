@@ -1,4 +1,4 @@
-package com.team.youarelikemetoo.User.DTO;
+package com.team.youarelikemetoo.Auth.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
