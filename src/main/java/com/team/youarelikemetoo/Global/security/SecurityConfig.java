@@ -3,7 +3,6 @@ package com.team.youarelikemetoo.Global.security;
 
 import com.team.youarelikemetoo.Global.JWT.JWTFilter;
 import com.team.youarelikemetoo.Global.JWT.JWTUtil;
-import com.team.youarelikemetoo.Auth.CustomSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,11 +15,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
 
-    public SecurityConfig(CustomSuccessHandler customSuccessHandler, JWTUtil jwtUtil){
-        this.customSuccessHandler = customSuccessHandler;
+    public SecurityConfig(JWTUtil jwtUtil){
         this.jwtUtil = jwtUtil;
     }
 

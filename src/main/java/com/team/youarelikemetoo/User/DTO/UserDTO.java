@@ -12,21 +12,21 @@ public class UserDTO {
 
     private String name;
     private String provider;
-    private String oauth_id;
+    private String oauthId;
     private String role;
 
     public UserEntity toEntity(){
         UserEntity user = new UserEntity();
         user.setName(name);
         user.setProvider(provider);
-        user.setOauth_id(oauth_id);
+        user.setOauthId(oauthId);
         user.setRole(role);
         return user;
     }
 
     static public UserDTO fromEntity(UserEntity user){
         return UserDTO.builder()
-                .oauth_id(user.getOauth_id())
+                .oauthId(user.getOauthId())
                 .provider(user.getProvider())
                 .name(user.getName())
                 .role(user.getRole())

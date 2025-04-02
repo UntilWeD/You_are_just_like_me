@@ -16,7 +16,7 @@ public class UserEntity {
 
     private String provider;
 
-    private String oauth_id;
+    private String oauthId;
 
     private String name;
 

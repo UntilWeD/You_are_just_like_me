@@ -32,12 +32,12 @@ public class AuthService {
             }
 
             // 사용자 정보 생성 또는 조회
-            UserEntity user = userRepository.findByOauth_idAndProvider(userInfo.getProviderId(), "kakao")
+            UserEntity user = userRepository.findByOauthIdAndProvider(userInfo.getProviderId(), "kakao")
                     .orElseGet(() -> {
                         UserDTO authUser = UserDTO.builder()
                                 .provider("kakao")
                                 .name(userInfo.getName())
-                                .oauth_id(userInfo.getProviderId())
+                                .oauthId(userInfo.getProviderId())
                                 .role("ROLE_USER")
                                 .build();
                         return userRepository.save(authUser.toEntity());
