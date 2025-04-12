@@ -3,16 +3,20 @@ package com.team.youarelikemetoo.Auth.Service;
 import com.team.youarelikemetoo.Auth.DTO.KakaoUserResponse;
 import com.team.youarelikemetoo.Auth.DTO.LoginRequest;
 import com.team.youarelikemetoo.Auth.DTO.LoginResponse;
+import com.team.youarelikemetoo.Auth.DTO.ReissueResponse;
 import com.team.youarelikemetoo.Global.JWT.JWTUtil;
+import com.team.youarelikemetoo.Global.JWT.Service.RedisService;
 import com.team.youarelikemetoo.User.DTO.UserDTO;
 import com.team.youarelikemetoo.User.Entity.UserEntity;
 import com.team.youarelikemetoo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -20,6 +24,7 @@ public class AuthService {
     private final WebClient webClient;
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
+    private final RedisService redisService;
 
 
     public ResponseEntity<?> login(String accessToken, LoginRequest loginRequest){
@@ -43,11 +48,15 @@ public class AuthService {
                         return userRepository.save(authUser.toEntity());
                     });
 
-            String token = jwtUtil.createJwt(user.getName(), user.getRole(), 60*60*60L);
+            String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 60*60*1000L);
+            String jwtRefreshToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 24*60*60*60L);
+
+            redisService.saveRefreshToken(user.getOauthId(), jwtRefreshToken, 24 * 60 * 60* 1000L);
 
             // 로그인 응답 생성
             LoginResponse loginResponse = LoginResponse.builder()
-                    .token(token)
+                    .accessToken(jwtAccessToken)
+                    .refreshToken(jwtRefreshToken)
                     .user(UserDTO.fromEntity(user))
                     .build();
 
@@ -58,15 +67,50 @@ public class AuthService {
         return new ResponseEntity<>(null);
     }
 
+    public ResponseEntity<?> reissue(String accessToken, String refreshToken){
+        if (jwtUtil.isExpired(refreshToken)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("리프레시 토큰이 만료되었습니다.");
+        }
+
+        String oauthId = jwtUtil.getOauthId(refreshToken);
+
+        String storedRefreshToken = redisService.getRefreshToken(oauthId);
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh Token");
+        }
+
+        String role = jwtUtil.getRole(refreshToken);
+        String newAccessToken = jwtUtil.createJwt(oauthId, role, 60*60*1000L);
+        ReissueResponse response = new ReissueResponse(newAccessToken);
+
+
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> logout(String oauthId, String accessToken){
+        redisService.deleteRefreshToken(oauthId);
+
+        // 무상태인 AccessToken에 대하여 블랙리스트에 담는 로직 후에 추가....
+        long expiration = jwtUtil.getExpiration(accessToken) - System.currentTimeMillis();
+
+        redisService.blacklistToken(accessToken, expiration);
+
+        return ResponseEntity.ok("로그아웃 성공");
+    }
+
     private KakaoUserResponse getKakaoUserInfo(String accessToken){
+        log.info("카카오톡 로그인 전송 시작");
+        log.info("accessToken ={}", accessToken);
         try{
             return webClient.get()
                     .uri("https://kapi.kakao.com/v2/user/me")
-                    .header("Authorization", "Bearer " + accessToken)
+                    .header("Authorization", accessToken)
+
                     .retrieve()
                     .bodyToMono(KakaoUserResponse.class)
                     .block();
         } catch (Exception e){
+            log.info("에러발생 : " + e);
             return null;
         }
     }

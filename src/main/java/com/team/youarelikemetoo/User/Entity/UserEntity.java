@@ -24,4 +24,13 @@ public class UserEntity {
 
     private String role;
 
+    private int age;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private String job;
+    private String addr;
+
+
 }

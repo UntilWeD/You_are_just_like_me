@@ -1,8 +1,9 @@
-package com.team.youarelikemetoo.Global.security;
+package com.team.youarelikemetoo.Global.Security;
 
 
 import com.team.youarelikemetoo.Global.JWT.JWTFilter;
 import com.team.youarelikemetoo.Global.JWT.JWTUtil;
+import com.team.youarelikemetoo.Global.JWT.Service.RedisService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,9 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JWTUtil jwtUtil;
+    private final RedisService redisService;
 
-    public SecurityConfig(JWTUtil jwtUtil){
+    public SecurityConfig(JWTUtil jwtUtil, RedisService redisService){
         this.jwtUtil = jwtUtil;
+        this.redisService = redisService;
     }
 
     @Bean
@@ -36,7 +39,7 @@ public class SecurityConfig {
 
         //JWTFilter 추가
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, redisService), UsernamePasswordAuthenticationFilter.class);
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth

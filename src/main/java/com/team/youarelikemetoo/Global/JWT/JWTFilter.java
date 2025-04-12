@@ -1,12 +1,14 @@
 package com.team.youarelikemetoo.Global.JWT;
 
 import com.team.youarelikemetoo.Auth.DTO.CustomOAuth2User;
+import com.team.youarelikemetoo.Global.JWT.Service.RedisService;
 import com.team.youarelikemetoo.User.DTO.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,20 +18,29 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Slf4j
+@RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    private final RedisService redisService;
 
-    public JWTFilter(JWTUtil jwtUtil){
-        this.jwtUtil = jwtUtil;
-    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        // /login 요청은 JWT 검증하지 않음
+        if (path.equals("/login")) {
+            log.info("Skip JWT filter for /login");
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // Authorization 헤더에서 Bearer 토큰 추출
         String authHeader = request.getHeader("Authorization");
+
 
         // 헤더가 없거나 Bearer 형식이 아니면 필터 통과
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -44,18 +55,26 @@ public class JWTFilter extends OncePerRequestFilter {
         //토큰 유효기간 검증
         if(jwtUtil.isExpired(token)) {
             log.info("token is expired");
+
+            // 이거 하면 값을 반환해야하는거 아닌가??
             filterChain.doFilter(request,response);
 
             return;
         }
 
-        // 토큰에서 username, role 획득
-        String name = jwtUtil.getName(token);
+        // 블랙리스트 검증
+        if(redisService.isBlacklisted(token)){
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        // 토큰에서 oauthId, role 획득
+        String oauthId = jwtUtil.getOauthId(token);
         String role = jwtUtil.getRole(token);
 
         // UserDTO를 생성하여 값 set
         UserDTO userDTO = UserDTO.builder()
-                .name(name)
+                .oauthId(oauthId)
                 .role(role)
                 .build();
 

@@ -1,4 +1,4 @@
-package com.team.youarelikemetoo.Global.Util;
+package com.team.youarelikemetoo.Global.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
