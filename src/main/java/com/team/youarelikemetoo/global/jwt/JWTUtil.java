@@ -1,6 +1,7 @@
 package com.team.youarelikemetoo.global.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,16 @@ public class JWTUtil {
     }
 
     public Boolean isExpired(String token){
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try{
+            Date expiration = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload().getExpiration();
+            return expiration.before(new Date());
+        } catch (ExpiredJwtException e){
+            return true;
+        }
     }
 
     public Claims getClaims(String token){

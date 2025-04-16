@@ -17,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,7 +43,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        log.info("path : ",path);
+        log.info("path : {} ",path);
 
         // /login 요청은 JWT 검증하지 않음
         if (isExcluded(path)) {
@@ -64,15 +63,15 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // "Bearer " 접두어 제거하고 순수 토큰만 추출
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(7).trim();
+
 
         //토큰 유효기간 검증
         if(jwtUtil.isExpired(token)) {
-            log.info("token is expired");
-
-            // 이거 하면 값을 반환해야하는거 아닌가??
-            filterChain.doFilter(request,response);
-
+            log.info("AccessToken is expired: {}");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"error\": \"Access token is expired\"}");
             return;
         }
 
@@ -82,9 +81,12 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
+
         // 토큰에서 oauthId, role 획득
         String oauthId = jwtUtil.getOauthId(token);
         String role = jwtUtil.getRole(token);
+
+
 
         // UserDTO를 생성하여 값 set
         UserDTO userDTO = UserDTO.builder()
@@ -101,7 +103,7 @@ public class JWTFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
-
     }
+
 
 }

@@ -48,7 +48,7 @@ public class AuthService {
                         return userRepository.save(authUser.toEntity());
                     });
 
-            String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 60*60*1000L);
+            String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 60*60*60L*1000L);
             String jwtRefreshToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 24*60*60*60L);
 
             redisService.saveRefreshToken(user.getOauthId(), jwtRefreshToken, 24 * 60 * 60* 1000L);
@@ -67,10 +67,7 @@ public class AuthService {
         return new ResponseEntity<>(null);
     }
 
-    public ResponseEntity<?> reissue(String accessToken, String refreshToken){
-        if (jwtUtil.isExpired(refreshToken)){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("리프레시 토큰이 만료되었습니다.");
-        }
+    public ResponseEntity<?> reissue(String refreshToken){
 
         String oauthId = jwtUtil.getOauthId(refreshToken);
 
@@ -81,8 +78,9 @@ public class AuthService {
 
         String role = jwtUtil.getRole(refreshToken);
         String newAccessToken = jwtUtil.createJwt(oauthId, role, 60*60*1000L);
-        ReissueResponse response = new ReissueResponse(newAccessToken);
+        String jwtRefreshToken = jwtUtil.createJwt(oauthId, role, 24*60*60*60L);
 
+        ReissueResponse response = new ReissueResponse(newAccessToken, jwtRefreshToken);
 
         return ResponseEntity.ok(response);
     }

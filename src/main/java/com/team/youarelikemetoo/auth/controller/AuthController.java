@@ -45,8 +45,9 @@ public class AuthController {
                 content = @Content(schema = @Schema(implementation = ReissueResponse.class))
     )
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(@RequestBody ReissueRequest request){
-        return authService.reissue(request.getAccessToken(),request.getRefreshToken());
+    public ResponseEntity<?> reissue(@RequestHeader("Authorization") String refreshToken){
+        refreshToken = refreshToken.substring(7).trim();
+        return authService.reissue(refreshToken);
     }
 
     @Operation(summary = "OAuth2 유저 로그아웃", description = "해당 사용자의 정보를 기반으로 액세스 토큰 블랙리스트 등록, " +
