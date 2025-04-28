@@ -12,10 +12,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "사용자 API")
+@RequestMapping("/users")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -27,10 +27,22 @@ public class UserController {
             responseCode = "200", description = "유저 정보 조회 성공",
                 content = @Content(schema = @Schema(implementation = UserDTO.class))
     )
-    @GetMapping("/users/current")
+    @GetMapping("/current")
     public ResponseEntity<?> getCurrentUserInfo(@AuthenticationPrincipal CustomOAuth2User user){
         String oauthId = user.getName();
         return userService.getUserInfo(oauthId);
+    }
+
+    @PostMapping("/save")
+    @Operation(summary = "유저 정보를 저장합니다.", description = "OAuth2 로그인 후 나머지 부가 정보를 저장합니다.")
+    @ApiResponse(
+            responseCode = "200", description = "유저 정보 저장",
+                content = @Content(schema = @Schema(implementation = UserDTO.class))
+    )
+    public ResponseEntity<?> getSaveUserRequest(@RequestBody UserDTO userDTO,
+                                                @AuthenticationPrincipal CustomOAuth2User user){
+        String oauthId = user.getName();
+        return userService.saveUser(userDTO, oauthId);
     }
 
 

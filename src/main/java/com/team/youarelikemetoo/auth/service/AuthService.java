@@ -48,10 +48,10 @@ public class AuthService {
                         return userRepository.save(authUser.toEntity());
                     });
 
-            String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 60*60*60L*1000L);
-            String jwtRefreshToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 24*60*60*60L);
+            String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 4*60*60L*1000L);
+            String jwtRefreshToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 7*24*60*60*1000L);
 
-            redisService.saveRefreshToken(user.getOauthId(), jwtRefreshToken, 24 * 60 * 60* 1000L);
+            redisService.saveRefreshToken(user.getOauthId(), jwtRefreshToken, 7*24*60*60*1000L);
 
             // 로그인 응답 생성
             LoginResponse loginResponse = LoginResponse.builder()
@@ -74,6 +74,8 @@ public class AuthService {
         String storedRefreshToken = redisService.getRefreshToken(oauthId);
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh Token");
+        } else if (jwtUtil.isExpired(refreshToken)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Expired RefreshToken");
         }
 
         String role = jwtUtil.getRole(refreshToken);

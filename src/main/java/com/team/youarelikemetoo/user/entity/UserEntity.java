@@ -1,5 +1,6 @@
 package com.team.youarelikemetoo.user.entity;
 
+import com.team.youarelikemetoo.user.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,16 @@ public class UserEntity {
 
     private String job;
     private String addr;
+
+    public void changeUserInfo(UserDTO userDTO){
+        this.name = userDTO.getName();
+        this.age = userDTO.getAge();
+        this.gender = userDTO.getGender();
+        this.job = userDTO.getJob();
+        this.addr = userDTO.getAddr();
+
+        return;
+    }
 
 
 }
