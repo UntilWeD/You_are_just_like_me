@@ -37,7 +37,7 @@ public class UserService {
         Optional<UserEntity> user = userRepository.findByOauthId(oauthId);
         user.get().changeUserInfo(userDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body("save User OK");
+        return ResponseEntity.status(HttpStatus.OK).body("OK");
     }
 
 }
