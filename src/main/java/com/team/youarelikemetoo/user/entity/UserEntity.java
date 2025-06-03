@@ -17,6 +17,7 @@ public class UserEntity {
 
     private String provider;
 
+    @Column(name = "oauth_id")
     private String oauthId;
 
     private String name;

@@ -63,7 +63,18 @@ public class AuthController {
         return authService.logout(user.getName(), accessToken);
     }
 
+    @GetMapping("/getTestJWT")
+    @Operation(summary = "API 테스트용 JWT 토큰을 발급합니다.", description = "백엔드 테스트 용이라 이후에 없어질 예정")
+    @ApiResponse(
+            responseCode = "200", description = "테스트용 JWT 토큰 발급",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    public ResponseEntity<?> getTestJWT(){
+        return authService.getTestJWT();
+    }
 
-    
+
+
+
 
 }

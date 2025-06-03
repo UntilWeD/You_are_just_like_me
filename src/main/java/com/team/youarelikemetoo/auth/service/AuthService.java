@@ -101,7 +101,7 @@ public class AuthService {
 
     private KakaoUserResponse getKakaoUserInfo(String accessToken){
         log.info("카카오톡 로그인 전송 시작");
-        log.info("accessToken ={}", accessToken);
+        log.info("accessToken = {}", accessToken);
         try{
             return webClient.get()
                     .uri("https://kapi.kakao.com/v2/user/me")
@@ -114,6 +114,11 @@ public class AuthService {
             log.info("에러발생 : " + e);
             return null;
         }
+    }
+
+    public ResponseEntity<?> getTestJWT(){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                jwtUtil.createJwt("adminOAuthid", "ROLE_ADMIN", 60*60*1000L));
     }
 
 }
