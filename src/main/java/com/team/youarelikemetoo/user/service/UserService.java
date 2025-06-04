@@ -1,5 +1,6 @@
 package com.team.youarelikemetoo.user.service;
 
+import com.team.youarelikemetoo.global.util.ApiResponse;
 import com.team.youarelikemetoo.user.dto.UserDTO;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import com.team.youarelikemetoo.user.repository.UserRepository;
@@ -28,7 +29,7 @@ public class UserService {
         }
 
         UserEntity user = optionalUser.get();
-        return ResponseEntity.ok(UserDTO.fromEntity(user));
+        return ResponseEntity.ok(ApiResponse.success(UserDTO.fromEntity(user)));
     }
 
     public ResponseEntity<?> saveUser(UserDTO userDTO, String oauthId){
@@ -37,7 +38,7 @@ public class UserService {
         Optional<UserEntity> user = userRepository.findByOauthId(oauthId);
         user.get().changeUserInfo(userDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
 }

@@ -22,7 +22,7 @@ public class AlarmController {
             responseCode = "200", description = "알람 저장",
             content = @Content(schema = @Schema(implementation = String.class))
     )
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> getSaveAlarmRequest(@RequestBody AlarmDTO alarmDTO){
         return alarmService.saveAlarm(alarmDTO);
     }
@@ -33,7 +33,7 @@ public class AlarmController {
             content = @Content(schema = @Schema(implementation = AlarmDTO.class))
     )
     @GetMapping("/{alarmId}")
-    public ResponseEntity<?> getReadAlarmRequest(@RequestParam Long alarmId){
+    public ResponseEntity<?> getReadAlarmRequest(@PathVariable Long alarmId){
         return alarmService.getAlarm(alarmId);
     }
 
@@ -43,7 +43,7 @@ public class AlarmController {
             content = @Content(schema = @Schema(implementation = AlarmDTO.class))
     )
     @PutMapping("/{alarmId}")
-    public ResponseEntity<?> getUpdateAlarmRequest(@RequestParam Long alarmId,@RequestBody AlarmDTO alarmDTO){
+    public ResponseEntity<?> getUpdateAlarmRequest(@PathVariable Long alarmId,@RequestBody AlarmDTO alarmDTO){
         return alarmService.updateAlarm(alarmId, alarmDTO);
     }
 
@@ -53,7 +53,7 @@ public class AlarmController {
             content = @Content(schema = @Schema(implementation = String.class))
     )
     @DeleteMapping ("/{alarmId}")
-    public ResponseEntity<?> getDeleteAlarmRequest(@RequestParam Long alarmId){
+    public ResponseEntity<?> getDeleteAlarmRequest(@PathVariable Long alarmId){
         return alarmService.deleteAlarm(alarmId);
     }
 

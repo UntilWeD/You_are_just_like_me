@@ -6,6 +6,7 @@ import com.team.youarelikemetoo.auth.dto.LoginResponse;
 import com.team.youarelikemetoo.auth.dto.ReissueResponse;
 import com.team.youarelikemetoo.global.jwt.JWTUtil;
 import com.team.youarelikemetoo.global.jwt.service.RedisService;
+import com.team.youarelikemetoo.global.util.ApiResponse;
 import com.team.youarelikemetoo.user.dto.UserDTO;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import com.team.youarelikemetoo.user.repository.UserRepository;
@@ -61,11 +62,12 @@ public class AuthService {
                     .user(UserDTO.fromEntity(user))
                     .build();
 
-            return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.ok(ApiResponse.success(loginResponse));
         }
 
 
-        return new ResponseEntity<>(null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.failure("로그인이 정상적으로 이루어지지 않았습니다."));
     }
 
     public ResponseEntity<?> reissue(String refreshToken){
@@ -85,7 +87,7 @@ public class AuthService {
 
         ReissueResponse response = new ReissueResponse(newAccessToken, jwtRefreshToken);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     public ResponseEntity<?> logout(String oauthId, String accessToken){
@@ -96,7 +98,7 @@ public class AuthService {
 
         redisService.blacklistToken(accessToken, expiration);
 
-        return ResponseEntity.ok("로그아웃 성공");
+        return ResponseEntity.ok(ApiResponse.success("로그아웃을 성공하였습니다."));
     }
 
     private KakaoUserResponse getKakaoUserInfo(String accessToken){
@@ -106,11 +108,11 @@ public class AuthService {
             return webClient.get()
                     .uri("https://kapi.kakao.com/v2/user/me")
                     .header("Authorization", accessToken)
-
                     .retrieve()
                     .bodyToMono(KakaoUserResponse.class)
                     .block();
         } catch (Exception e){
+            // 이후 공통 예외 처리 컨트롤러로 처리하기
             log.info("에러발생 : " + e);
             return null;
         }
@@ -118,7 +120,10 @@ public class AuthService {
 
     public ResponseEntity<?> getTestJWT(){
         return ResponseEntity.status(HttpStatus.OK).body(
-                jwtUtil.createJwt("adminOAuthid", "ROLE_ADMIN", 60*60*1000L));
+                ApiResponse.success(
+                        "Bearer "+ jwtUtil.createJwt("adminOAuthid", "ROLE_ADMIN", 60*60*1000L)
+                )
+        );
     }
 
 }

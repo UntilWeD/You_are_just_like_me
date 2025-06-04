@@ -36,17 +36,20 @@ public class Alarm {
     @Column(name = "dayofweek")
     private List<Integer> dayOfWeek;
 
+    private String nickname;
+
     @Column(name = "isrepeating")
     private boolean isRepeating;
 
     @Builder
-    public Alarm(Long id, String title,String description, String category, LocalTime time, List<Integer> dayOfWeek, boolean isRepeating) {
+    public Alarm(Long id, String title,String description, String category, LocalTime time, List<Integer> dayOfWeek,String nickname ,boolean isRepeating) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.category = category;
         this.time = time;
         this.dayOfWeek = dayOfWeek;
+        this.nickname = nickname;
         this.isRepeating = isRepeating;
     }
 

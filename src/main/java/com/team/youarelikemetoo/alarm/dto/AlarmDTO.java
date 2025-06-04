@@ -25,6 +25,8 @@ public class AlarmDTO {
 
     private List<Integer> dayOfWeek;
 
+    private String nickname;
+
     private boolean isRepeating;
 
     public Alarm toEntity(){
@@ -34,6 +36,7 @@ public class AlarmDTO {
                 .category(this.category)
                 .time(this.time)
                 .dayOfWeek(this.dayOfWeek)
+                .nickname(this.nickname)
                 .isRepeating(this.isRepeating)
                 .build();
         return alarm;
@@ -46,6 +49,8 @@ public class AlarmDTO {
                 .category(alarm.getCategory())
                 .time(alarm.getTime())
                 .dayOfWeek(alarm.getDayOfWeek())
+                .nickname(alarm.getNickname())
+                .isRepeating(alarm.isRepeating())
                 .build();
         return alarmDTO;
     }
