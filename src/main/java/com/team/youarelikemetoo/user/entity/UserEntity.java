@@ -13,9 +13,11 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
-    private String provider;
+    @Column(name = "oauth_provider")
+    private String oauthProvider;
 
     @Column(name = "oauth_id")
     private String oauthId;

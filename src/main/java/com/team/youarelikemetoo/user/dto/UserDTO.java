@@ -12,7 +12,7 @@ import lombok.Setter;
 public class UserDTO {
 
     private String name;
-    private String provider;
+    private String oauthProvider;
     private String oauthId;
     private String role;
     private int age;
@@ -25,7 +25,7 @@ public class UserDTO {
     public UserEntity toEntity(){
         UserEntity user = new UserEntity();
         user.setName(name);
-        user.setProvider(provider);
+        user.setOauthProvider(oauthProvider);
         user.setOauthId(oauthId);
         user.setRole(role);
         user.setAge(age);
@@ -39,7 +39,7 @@ public class UserDTO {
     static public UserDTO fromEntity(UserEntity user){
         return UserDTO.builder()
                 .oauthId(user.getOauthId())
-                .provider(user.getProvider())
+                .oauthProvider(user.getOauthProvider())
                 .name(user.getName())
                 .role(user.getRole())
                 .age(user.getAge())

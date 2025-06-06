@@ -42,7 +42,7 @@ public class AuthService {
             UserEntity user = userRepository.findByOauthIdAndProvider(userInfo.getProviderId(), "kakao")
                     .orElseGet(() -> {
                         UserDTO authUser = UserDTO.builder()
-                                .provider("kakao")
+                                .oauthProvider("kakao")
                                 .name(userInfo.getName())
                                 .oauthId(userInfo.getProviderId())
                                 .role("ROLE_USER")

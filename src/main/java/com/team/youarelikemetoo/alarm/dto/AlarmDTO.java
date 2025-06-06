@@ -1,6 +1,7 @@
 package com.team.youarelikemetoo.alarm.dto;
 
 import com.team.youarelikemetoo.alarm.entity.Alarm;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,39 +22,42 @@ public class AlarmDTO {
 
     private String category;
 
+    @Schema(hidden = true)
+    private Long categoryId;
+
     private LocalTime time;
 
     private List<Integer> dayOfWeek;
 
-    private String nickname;
+    private String name;
 
     private boolean isRepeating;
 
-    public Alarm toEntity(){
-        Alarm alarm = Alarm.builder()
-                .title(this.title)
-                .description(this.description)
-                .category(this.category)
-                .time(this.time)
-                .dayOfWeek(this.dayOfWeek)
-                .nickname(this.nickname)
-                .isRepeating(this.isRepeating)
-                .build();
-        return alarm;
-    }
-
-    public static AlarmDTO fromEntity(Alarm alarm){
-        AlarmDTO alarmDTO = AlarmDTO.builder()
-                .title(alarm.getTitle())
-                .description(alarm.getDescription())
-                .category(alarm.getCategory())
-                .time(alarm.getTime())
-                .dayOfWeek(alarm.getDayOfWeek())
-                .nickname(alarm.getNickname())
-                .isRepeating(alarm.isRepeating())
-                .build();
-        return alarmDTO;
-    }
+//    public Alarm toEntity(){
+//        Alarm alarm = Alarm.builder()
+//                .title(this.title)
+//                .description(this.description)
+//                .category(this.category)
+//                .time(this.time)
+//                .dayOfWeek(this.dayOfWeek)
+//                .nickname(this.name)
+//                .isRepeating(this.isRepeating)
+//                .build();
+//        return alarm;
+//    }
+//
+//    public static AlarmDTO fromEntity(Alarm alarm){
+//        AlarmDTO alarmDTO = AlarmDTO.builder()
+//                .title(alarm.getTitle())
+//                .description(alarm.getDescription())
+//                .category(alarm.getCategory())
+//                .time(alarm.getTime())
+//                .dayOfWeek(alarm.getDayOfWeek())
+//                .nickname(alarm.getNickname())
+//                .isRepeating(alarm.isRepeating())
+//                .build();
+//        return alarmDTO;
+//    }
 
 
 

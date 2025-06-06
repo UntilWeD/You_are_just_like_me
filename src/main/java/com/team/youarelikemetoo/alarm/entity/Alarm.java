@@ -20,13 +20,19 @@ public class Alarm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "alarm_id")
     private Long id;
+
+    @Column(name = "category_id")
+    private Long categoryId;
+
+    @Column(name = "creator_id")
+    private Long creatorId;
 
     private String title;
 
     private String description;
 
-    private String category;
 
     @Column(name = "time")
     private LocalTime time;
@@ -36,27 +42,28 @@ public class Alarm {
     @Column(name = "dayofweek")
     private List<Integer> dayOfWeek;
 
-    private String nickname;
+    private String name;
 
     @Column(name = "isrepeating")
     private boolean isRepeating;
 
     @Builder
-    public Alarm(Long id, String title,String description, String category, LocalTime time, List<Integer> dayOfWeek,String nickname ,boolean isRepeating) {
+    public Alarm(Long id, Long categoryId, Long creatorId, String title, String description, LocalTime time, List<Integer> dayOfWeek, String name, boolean isRepeating) {
         this.id = id;
+        this.categoryId = categoryId;
+        this.creatorId = creatorId;
         this.title = title;
         this.description = description;
-        this.category = category;
         this.time = time;
         this.dayOfWeek = dayOfWeek;
-        this.nickname = nickname;
+        this.name = name;
         this.isRepeating = isRepeating;
     }
 
     public void updateAlarmStatus(AlarmDTO alarmDTO){
         this.title = alarmDTO.getTitle();
         this.description = alarmDTO.getDescription();
-        this.category = alarmDTO.getCategory();
+        this.categoryId = alarmDTO.getCategoryId();
         this.time = alarmDTO.getTime();
         this.dayOfWeek = alarmDTO.getDayOfWeek();
         this.isRepeating = alarmDTO.isRepeating();

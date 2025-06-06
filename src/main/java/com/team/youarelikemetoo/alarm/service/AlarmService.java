@@ -58,5 +58,7 @@ public class AlarmService {
         return ResponseEntity.ok(ApiResponse.success("[MSG] 알람이 성공적으로 삭제되었습니다."));
     }
 
+    private Long find
+
 
 }
