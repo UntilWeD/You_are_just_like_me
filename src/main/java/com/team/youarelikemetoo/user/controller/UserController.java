@@ -1,7 +1,7 @@
 package com.team.youarelikemetoo.user.controller;
 
 
-import com.team.youarelikemetoo.auth.dto.CustomOAuth2User;
+import com.team.youarelikemetoo.auth.dto.CustomUserDetails;
 import com.team.youarelikemetoo.user.dto.UserDTO;
 import com.team.youarelikemetoo.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,8 +28,8 @@ public class UserController {
                 content = @Content(schema = @Schema(implementation = UserDTO.class))
     )
     @GetMapping("/current")
-    public ResponseEntity<?> getCurrentUserInfo(@AuthenticationPrincipal CustomOAuth2User user){
-        String oauthId = user.getName();
+    public ResponseEntity<?> getCurrentUserInfo(@AuthenticationPrincipal CustomUserDetails user){
+        String oauthId = user.getOauthId();
         return userService.getUserInfo(oauthId);
     }
 
@@ -40,8 +40,8 @@ public class UserController {
                 content = @Content(schema = @Schema(implementation = UserDTO.class))
     )
     public ResponseEntity<?> getSaveUserRequest(@RequestBody UserDTO userDTO,
-                                                @AuthenticationPrincipal CustomOAuth2User user){
-        String oauthId = user.getName();
+                                                @AuthenticationPrincipal CustomUserDetails user){
+        String oauthId = user.getOauthId();
         return userService.saveUser(userDTO, oauthId);
     }
 

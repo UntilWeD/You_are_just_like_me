@@ -2,6 +2,7 @@ package com.team.youarelikemetoo.alarm.entity;
 
 import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
 import com.team.youarelikemetoo.alarm.util.DayOfWeekConverter;
+import com.team.youarelikemetoo.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,11 +24,13 @@ public class Alarm {
     @Column(name = "alarm_id")
     private Long id;
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @Column(name = "creator_id")
-    private Long creatorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private UserEntity user;
 
     private String title;
 
@@ -42,28 +45,25 @@ public class Alarm {
     @Column(name = "dayofweek")
     private List<Integer> dayOfWeek;
 
-    private String name;
-
     @Column(name = "isrepeating")
     private boolean isRepeating;
 
     @Builder
-    public Alarm(Long id, Long categoryId, Long creatorId, String title, String description, LocalTime time, List<Integer> dayOfWeek, String name, boolean isRepeating) {
-        this.id = id;
-        this.categoryId = categoryId;
-        this.creatorId = creatorId;
+    public Alarm(Category category, UserEntity user, String title, String description, LocalTime time, List<Integer> dayOfWeek, boolean isRepeating) {
+        this.category = category;
+        this.user = user;
         this.title = title;
         this.description = description;
         this.time = time;
         this.dayOfWeek = dayOfWeek;
-        this.name = name;
         this.isRepeating = isRepeating;
     }
 
-    public void updateAlarmStatus(AlarmDTO alarmDTO){
+
+    public void updateAlarmStatus(AlarmDTO alarmDTO, Category category){
         this.title = alarmDTO.getTitle();
         this.description = alarmDTO.getDescription();
-        this.categoryId = alarmDTO.getCategoryId();
+        this.category = category;
         this.time = alarmDTO.getTime();
         this.dayOfWeek = alarmDTO.getDayOfWeek();
         this.isRepeating = alarmDTO.isRepeating();

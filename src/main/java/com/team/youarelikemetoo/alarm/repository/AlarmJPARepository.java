@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface AlarmJPARepository extends JpaRepository<Alarm, Long> {
     public Optional<Alarm> findById(Long alarmId);
+
 }

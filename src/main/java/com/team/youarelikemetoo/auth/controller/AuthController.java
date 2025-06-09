@@ -57,10 +57,10 @@ public class AuthController {
                 content = @Content(schema = @Schema(implementation = String.class))
     )
     @PostMapping ("/logout")
-    public ResponseEntity<?> logout(@AuthenticationPrincipal CustomOAuth2User user,
+    public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails user,
                                     @RequestHeader("Authorization") String authHeader){
         String accessToken = authHeader.replace("Bearer ", "");
-        return authService.logout(user.getName(), accessToken);
+        return authService.logout(user.getOauthId(), accessToken);
     }
 
     @GetMapping("/getTestJWT")

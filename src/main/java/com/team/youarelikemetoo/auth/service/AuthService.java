@@ -9,12 +9,13 @@ import com.team.youarelikemetoo.global.jwt.service.RedisService;
 import com.team.youarelikemetoo.global.util.ApiResponse;
 import com.team.youarelikemetoo.user.dto.UserDTO;
 import com.team.youarelikemetoo.user.entity.UserEntity;
-import com.team.youarelikemetoo.user.repository.UserRepository;
+import com.team.youarelikemetoo.user.repository.UserJPARepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
@@ -24,11 +25,12 @@ public class AuthService {
 
     // check
     private final WebClient webClient;
-    private final UserRepository userRepository;
+    private final UserJPARepository userJPARepository;
     private final JWTUtil jwtUtil;
     private final RedisService redisService;
 
 
+    @Transactional
     public ResponseEntity<?> login(String accessToken, LoginRequest loginRequest){
 
         if (loginRequest.getAuthType().equals("kakao")) {
@@ -39,7 +41,7 @@ public class AuthService {
             }
 
             // 사용자 정보 생성 또는 조회
-            UserEntity user = userRepository.findByOauthIdAndProvider(userInfo.getProviderId(), "kakao")
+            UserEntity user = userJPARepository.findByOauthIdAndOauthProvider(userInfo.getProviderId(), "kakao")
                     .orElseGet(() -> {
                         UserDTO authUser = UserDTO.builder()
                                 .oauthProvider("kakao")
@@ -47,11 +49,11 @@ public class AuthService {
                                 .oauthId(userInfo.getProviderId())
                                 .role("ROLE_USER")
                                 .build();
-                        return userRepository.save(authUser.toEntity());
+                        return userJPARepository.save(authUser.toEntity());
                     });
-
-            String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 4*60*60L*1000L);
-            String jwtRefreshToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), 7*24*60*60*1000L);
+            String userId = String.valueOf(user.getId());
+            String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), userId,4*60*60L*1000L);
+            String jwtRefreshToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), userId,7*24*60*60*1000L);
 
             redisService.saveRefreshToken(user.getOauthId(), jwtRefreshToken, 7*24*60*60*1000L);
 
@@ -82,8 +84,9 @@ public class AuthService {
         }
 
         String role = jwtUtil.getRole(refreshToken);
-        String newAccessToken = jwtUtil.createJwt(oauthId, role, 60*60*1000L);
-        String jwtRefreshToken = jwtUtil.createJwt(oauthId, role, 24*60*60*60L);
+        String userId = jwtUtil.getUserId(refreshToken);
+        String newAccessToken = jwtUtil.createJwt(oauthId, role, userId,60*60*1000L);
+        String jwtRefreshToken = jwtUtil.createJwt(oauthId, role, userId,24*60*60*60L);
 
         ReissueResponse response = new ReissueResponse(newAccessToken, jwtRefreshToken);
 
@@ -121,7 +124,7 @@ public class AuthService {
     public ResponseEntity<?> getTestJWT(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.success(
-                        "Bearer "+ jwtUtil.createJwt("adminOAuthid", "ROLE_ADMIN", 60*60*1000L)
+                        "Bearer "+ jwtUtil.createJwt("testOauthProvider", "ROLE_ADMIN", "1",60*60*1000L)
                 )
         );
     }

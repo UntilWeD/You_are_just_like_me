@@ -1,9 +1,8 @@
 package com.team.youarelikemetoo.global.jwt;
 
-import com.team.youarelikemetoo.auth.dto.CustomOAuth2User;
+import com.team.youarelikemetoo.auth.dto.CustomUserDetails;
 import com.team.youarelikemetoo.global.config.SecurityConfig;
 import com.team.youarelikemetoo.global.jwt.service.RedisService;
-import com.team.youarelikemetoo.user.dto.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -84,21 +83,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰에서 oauthId, role 획득
         String oauthId = jwtUtil.getOauthId(token);
+        Long userId = Long.parseLong(jwtUtil.getUserId(token));
         String role = jwtUtil.getRole(token);
 
+        CustomUserDetails principal = new CustomUserDetails(userId ,oauthId, role);
 
-
-        // UserDTO를 생성하여 값 set
-        UserDTO userDTO = UserDTO.builder()
-                .oauthId(oauthId)
-                .role(role)
-                .build();
-
-        //UserDetails에 회원 정보 객체 담기
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
 
         // 스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
         // 세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
