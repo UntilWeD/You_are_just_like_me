@@ -21,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService {
 
     // check
@@ -30,7 +31,6 @@ public class AuthService {
     private final RedisService redisService;
 
 
-    @Transactional
     public ResponseEntity<?> login(String accessToken, LoginRequest loginRequest){
 
         if (loginRequest.getAuthType().equals("kakao")) {

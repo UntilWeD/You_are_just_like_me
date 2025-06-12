@@ -21,14 +21,12 @@ public class UserService {
 
     private final UserJPARepository userJPARepository;
 
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getUserInfo(String oauthId){
-        Optional<UserEntity> optionalUser = userJPARepository.findByOauthId(oauthId);
+        UserEntity user = userJPARepository.findByOauthId(oauthId)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
 
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 유저입니다.");
-        }
 
-        UserEntity user = optionalUser.get();
         return ResponseEntity.ok(ApiResponse.success(UserDTO.fromEntity(user)));
     }
 

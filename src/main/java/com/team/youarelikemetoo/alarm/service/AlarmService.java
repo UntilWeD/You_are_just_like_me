@@ -27,6 +27,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AlarmService {
 
     private final AlarmJPARepository alarmJPARepository;
@@ -35,7 +36,6 @@ public class AlarmService {
     private final AlarmInstanceJpaRepository alarmInstanceJpaRepository;
     private final MyBatisAlarmMessageRepository myBatisAlarmMessageRepository;
 
-    @Transactional
     public ResponseEntity<?> saveAlarm(AlarmDTO alarmDTO, Long userId){
         log.info(alarmDTO.toString());
 
@@ -51,6 +51,7 @@ public class AlarmService {
     }
 
 
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getAlarm(Long alarmId) {
         Optional<Alarm> alarm = alarmJPARepository.findById(alarmId);
         if(alarm.isPresent()){
@@ -64,7 +65,7 @@ public class AlarmService {
 
     }
 
-    @Transactional
+
     public ResponseEntity<?> updateAlarm(Long alarmId, AlarmDTO alarmDTO){
         Optional<Alarm> alarm = alarmJPARepository.findById(alarmId);
 

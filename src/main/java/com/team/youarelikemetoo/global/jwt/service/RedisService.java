@@ -18,8 +18,11 @@ public class RedisService {
     // 리프레시 저장
     public void saveRefreshToken(String oauthId, String refrehToken, long expirationMs){
         String key = PREFIX + oauthId;
-
-        redisTemplate.opsForValue().set(key, refrehToken, expirationMs, TimeUnit.MILLISECONDS);
+        try{
+            redisTemplate.opsForValue().set(key, refrehToken, expirationMs, TimeUnit.MILLISECONDS);
+        } catch (IllegalArgumentException exception){
+            throw new RuntimeException("Redis에 RefreshToken 저장 중 오류 발생: " + exception.getMessage(), exception);
+        }
     }
 
     public String getRefreshToken(String oauthId) {

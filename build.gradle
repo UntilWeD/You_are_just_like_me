@@ -37,8 +37,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     // OAuth2 리소스 서버 (JWT 인증을 위한 옵션, OAuth2 서버 역할할 때 필요)
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    // Spring Web (REST API 개발을 위해 필요)
-    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
