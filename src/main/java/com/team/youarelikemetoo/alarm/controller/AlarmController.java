@@ -22,7 +22,7 @@ public class AlarmController {
     @Operation(summary = "알람정보를 저장합니다.", description = "요청한 알람을 DB에 저장합니다.")
     @ApiResponse(
             responseCode = "200", description = "알람 저장",
-            content = @Content(schema = @Schema(implementation = String.class))
+            content = @Content(schema = @Schema(implementation = Long.class))
     )
     @PostMapping
     public ResponseEntity<?> getSaveAlarmRequest(@RequestBody AlarmDTO alarmDTO,

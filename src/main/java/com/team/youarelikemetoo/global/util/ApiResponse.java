@@ -17,7 +17,7 @@ public class ApiResponse<T> {
 
     public ApiResponse(String message) {
         this.success = false;
-        this.message = "[MSG] 요청이 실패하였습니다.";
+        this.message = message;
         this.body = null;
     }
 

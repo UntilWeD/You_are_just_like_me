@@ -2,7 +2,6 @@ package com.team.youarelikemetoo.alarm.service;
 
 import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
 import com.team.youarelikemetoo.alarm.dto.AlarmMessageDTO;
-import com.team.youarelikemetoo.alarm.dto.AlarmSaveResponse;
 import com.team.youarelikemetoo.alarm.entity.Alarm;
 import com.team.youarelikemetoo.alarm.entity.AlarmInstance;
 import com.team.youarelikemetoo.alarm.entity.Category;
@@ -47,7 +46,7 @@ public class AlarmService {
 
 
         Alarm savedAlarm = alarmJPARepository.save(alarmDTO.toEntity(user, category));
-        return ResponseEntity.ok(ApiResponse.success(new AlarmSaveResponse(savedAlarm.getId(), LocalDateTime.now())));
+        return ResponseEntity.ok(ApiResponse.success(savedAlarm.getId()));
     }
 
 

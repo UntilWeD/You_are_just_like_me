@@ -15,7 +15,7 @@ public class UserDTO {
     private String oauthProvider;
     private String oauthId;
     private String role;
-    private int age;
+    private Integer age;
     private Gender gender;
     private String job;
     private String addr;
@@ -28,7 +28,14 @@ public class UserDTO {
         user.setOauthProvider(oauthProvider);
         user.setOauthId(oauthId);
         user.setRole(role);
-        user.setAge(age);
+
+        // null-safe: null이거나 유효한 값만 set
+        if (age != null && age > 0 && age < 150) {
+            user.setAge(age);
+        } else {
+            user.setAge(null); // 명시적으로 null 처리
+        }
+
         user.setGender(gender);
         user.setJob(job);
         user.setAddr(addr);
@@ -42,7 +49,7 @@ public class UserDTO {
                 .oauthProvider(user.getOauthProvider())
                 .name(user.getName())
                 .role(user.getRole())
-                .age(user.getAge())
+                .age(user.getAge() != null && user.getAge() >= 1 ? user.getAge() : null)
                 .gender(user.getGender())
                 .job(user.getJob())
                 .addr(user.getAddr())

@@ -49,8 +49,10 @@ public class AuthService {
                                 .oauthId(userInfo.getProviderId())
                                 .role("ROLE_USER")
                                 .build();
+
                         return userJPARepository.save(authUser.toEntity());
                     });
+
             String userId = String.valueOf(user.getId());
             String jwtAccessToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), userId,4*60*60L*1000L);
             String jwtRefreshToken = jwtUtil.createJwt(userInfo.getProviderId(), user.getRole(), userId,7*24*60*60*1000L);
@@ -116,7 +118,7 @@ public class AuthService {
                     .block();
         } catch (Exception e){
             // 이후 공통 예외 처리 컨트롤러로 처리하기
-            log.info("에러발생 : " + e);
+            log.info("에러발생 : {}", e);
             return null;
         }
     }
