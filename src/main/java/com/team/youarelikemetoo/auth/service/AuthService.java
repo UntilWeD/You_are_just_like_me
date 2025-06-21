@@ -126,7 +126,7 @@ public class AuthService {
     public ResponseEntity<?> getTestJWT(){
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.success(
-                        "Bearer "+ jwtUtil.createJwt("testOauthProvider", "ROLE_ADMIN", "1",60*60*1000L)
+                        "Bearer "+ jwtUtil.createJwt("testOauthProvider", "ROLE_ADMIN", "3",60*60*1000L)
                 )
         );
     }
