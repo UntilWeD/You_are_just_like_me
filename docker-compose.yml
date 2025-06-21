@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    image: utilwed7539/yalmt:latest
     container_name: yalmt-app
     ports:
       - "8080:8080"
