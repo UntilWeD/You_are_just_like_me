@@ -3,9 +3,7 @@ package com.team.youarelikemetoo.alarm.service;
 import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
 import com.team.youarelikemetoo.alarm.dto.AlarmMessageDTO;
 import com.team.youarelikemetoo.alarm.entity.Alarm;
-import com.team.youarelikemetoo.alarm.entity.AlarmInstance;
 import com.team.youarelikemetoo.alarm.entity.Category;
-import com.team.youarelikemetoo.alarm.repository.AlarmInstanceJpaRepository;
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
 import com.team.youarelikemetoo.alarm.repository.CategoryJPARepository;
 import com.team.youarelikemetoo.alarm.repository.mybatis.MyBatisAlarmMessageRepository;
@@ -20,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -33,8 +30,8 @@ public class AlarmService {
     private final AlarmJPARepository alarmJPARepository;
     private final UserJPARepository userJPARepository;
     private final CategoryJPARepository categoryJPARepository;
-    private final AlarmInstanceJpaRepository alarmInstanceJpaRepository;
     private final MyBatisAlarmMessageRepository myBatisAlarmMessageRepository;
+    private final AlarmHistoryService alarmHistoryService;
 
     public ResponseEntity<?> saveAlarm(AlarmDTO alarmDTO, Long userId){
         log.info(alarmDTO.toString());
@@ -92,19 +89,9 @@ public class AlarmService {
 
         String alarmMessage = buildAlarmMessage(dto);
 
-        UserEntity user = userJPARepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Alarm alarm = alarmJPARepository.findById(dto.getSourceAlarmId())
-                .orElseThrow(() -> new RuntimeException("Alarm not found"));
-
-        AlarmInstance alarmInstance = AlarmInstance.builder()
-                .renderedMessage(alarmMessage)
-                .createdAt(LocalDateTime.now())
-                .sourceAlarm(alarm)
-                .targetUser(user)
-                .build();
-
-        alarmInstanceJpaRepository.save(alarmInstance);
+        // 성능을 위해 알람 인스턴스 저장은 비동기 처리
+        // 또한 단일책임원칙을 위해 역할을 분리하기도 위함
+        alarmHistoryService.saveAlarmInstanceAsync(userId, dto.getSourceAlarmId(),alarmMessage);
 
         return ResponseEntity.ok(ApiResponse.success(alarmMessage));
     }
