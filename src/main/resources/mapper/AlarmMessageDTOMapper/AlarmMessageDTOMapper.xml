@@ -21,5 +21,27 @@
         ORDER BY RAND()
         LIMIT 3;
     </select>
+    
+    <select id="findRandomUserByUserId" resultType="AlarmMessageDTO">
+        SELECT
+            u.name,
+            a.time,
+            a.alarm_id as sourceAlarmId,
+            a.category_id as categoryId
+        FROM alarm a
+                 INNER JOIN User u ON a.creator_id = u.user_id
+        WHERE a.creator_id != #{userId}
+        ORDER BY RAND()
+            LIMIT 3;
+    </select>
+    
+    <select id="findRandomAlarmMessageTemplate" resultType="String">
+        SELECT t.message_template
+        FROM alarm_message_template t
+        WHERE t.category_id = #{categoryId}
+          AND t.time_label = #{timeLabel}
+        ORDER BY RAND()
+            LIMIT 3;
+    </select>
 
 </mapper>

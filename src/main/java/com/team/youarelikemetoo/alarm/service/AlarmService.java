@@ -3,6 +3,7 @@ package com.team.youarelikemetoo.alarm.service;
 import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
 import com.team.youarelikemetoo.alarm.dto.AlarmMessageDTO;
 import com.team.youarelikemetoo.alarm.entity.Alarm;
+import com.team.youarelikemetoo.alarm.entity.AlarmMessageTemplate;
 import com.team.youarelikemetoo.alarm.entity.Category;
 import com.team.youarelikemetoo.alarm.entity.TimeLabel;
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
@@ -89,10 +90,18 @@ public class AlarmService {
     public ResponseEntity<?> getAlarmMessage(Long userId, String alarmTime) {
         TimeLabel timeLabel = TimeLabel.from(alarmTime);
 
-        List<AlarmMessageDTO> dtos = myBatisAlarmMessageRepository.findRandomMessageByUserId(userId, timeLabel);
+        List<AlarmMessageDTO> alarmMessageDTOList = myBatisAlarmMessageRepository.findRandomUserByUserId(userId);
+        long categoryId = alarmMessageDTOList.get(0).getCategoryId();
+        List<String> alarmMessageTemplates = myBatisAlarmMessageRepository.findRandomAlarmMessageTemplate(categoryId, timeLabel);
+
+        for (int i=0; i <3; i++){
+            AlarmMessageDTO dto = alarmMessageDTOList.get(i);
+            dto.setMessageTemplate(alarmMessageTemplates.get(i));
+        }
 
 
-        List<String> alarmMessages = buildAlarmMessage(dtos);
+
+        List<String> alarmMessages = buildAlarmMessage(alarmMessageDTOList);
 
         // 성능을 위해 알람 인스턴스 저장은 비동기 처리
         // 또한 단일책임원칙을 위해 역할을 분리하기도 위함
@@ -106,11 +115,10 @@ public class AlarmService {
 
         for (AlarmMessageDTO dto : dtos){
             String formattedTime = dto.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-            dto.getMessageTemplate()
+            messages.add(dto.getMessageTemplate()
                     .replace("{username}", dto.getName())
-                    .replace("{time}", formattedTime);
+                    .replace("{time}", formattedTime));
         }
-
 
         return messages;
     }
