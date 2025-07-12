@@ -5,11 +5,11 @@ import com.team.youarelikemetoo.alarm.entity.TimeLabel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
 public interface AlarmMessageDTOMapper {
-
-    Optional<AlarmMessageDTO> findRandomMessageByUserId(@Param("userId") Long userId, @Param("timeLabel") TimeLabel timeLabel);
+    List<AlarmMessageDTO> findRandomMessageByUserId(@Param("userId") Long userId, @Param("timeLabel") TimeLabel timeLabel);
 
 }

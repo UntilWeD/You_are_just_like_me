@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -86,23 +88,30 @@ public class AlarmService {
     @LogExecutionTime
     public ResponseEntity<?> getAlarmMessage(Long userId, String alarmTime) {
         TimeLabel timeLabel = TimeLabel.from(alarmTime);
-        AlarmMessageDTO dto = myBatisAlarmMessageRepository.findRandomMessageByUserId(userId, timeLabel)
-                .orElseThrow(() -> new RuntimeException("AlarmMessage Not Found"));
+
+        List<AlarmMessageDTO> dtos = myBatisAlarmMessageRepository.findRandomMessageByUserId(userId, timeLabel);
 
 
-        String alarmMessage = buildAlarmMessage(dto);
+        List<String> alarmMessages = buildAlarmMessage(dtos);
 
         // 성능을 위해 알람 인스턴스 저장은 비동기 처리
         // 또한 단일책임원칙을 위해 역할을 분리하기도 위함
-        alarmHistoryService.saveAlarmInstanceAsync(userId, dto.getSourceAlarmId(),alarmMessage);
+//        alarmHistoryService.saveAlarmInstanceAsync(userId, dto.getSourceAlarmId(),alarmMessage);
 
-        return ResponseEntity.ok(ApiResponse.success(alarmMessage));
+        return ResponseEntity.ok(ApiResponse.success(alarmMessages));
     }
 
-    private String buildAlarmMessage(AlarmMessageDTO dto){
-        String formattedTime = dto.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        return dto.getMessageTemplate()
-                .replace("{username}", dto.getName())
-                .replace("{time}", formattedTime);
+    private List<String> buildAlarmMessage(List<AlarmMessageDTO> dtos){
+        List<String> messages = new ArrayList<>();
+
+        for (AlarmMessageDTO dto : dtos){
+            String formattedTime = dto.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+            dto.getMessageTemplate()
+                    .replace("{username}", dto.getName())
+                    .replace("{time}", formattedTime);
+        }
+
+
+        return messages;
     }
 }
