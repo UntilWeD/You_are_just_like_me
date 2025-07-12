@@ -11,6 +11,7 @@
            (    SELECT t.message_template
                 FROM alarm_message_template t
                 WHERE t.category_id = a.category_id
+                AND t.timeDAWN = #{timeLabel}
                 ORDER BY RAND()
                 LIMIT 1)
             AS messageTemplate

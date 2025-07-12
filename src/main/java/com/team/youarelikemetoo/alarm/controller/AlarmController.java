@@ -62,8 +62,9 @@ public class AlarmController {
 
     @Operation(summary = "응원 알람 메시지를 보냅니다.", description = "알람이 울릴 때 적절한 알람메시지를 조합하여 응원 메시지를 반환합니다.")
     @GetMapping("/message")
-    public ResponseEntity<?> getAlarmMessageRequest(@AuthenticationPrincipal CustomUserDetails user){
-        return alarmService.getAlarmMessage(user.getUserId());
+    public ResponseEntity<?> getAlarmMessageRequest(@AuthenticationPrincipal CustomUserDetails user,
+                                                    @RequestParam(value="time") String alarmTime){
+        return alarmService.getAlarmMessage(user.getUserId(), alarmTime);
     }
 
 

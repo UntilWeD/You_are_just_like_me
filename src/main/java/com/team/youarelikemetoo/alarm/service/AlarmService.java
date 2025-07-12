@@ -4,6 +4,7 @@ import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
 import com.team.youarelikemetoo.alarm.dto.AlarmMessageDTO;
 import com.team.youarelikemetoo.alarm.entity.Alarm;
 import com.team.youarelikemetoo.alarm.entity.Category;
+import com.team.youarelikemetoo.alarm.entity.TimeLabel;
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
 import com.team.youarelikemetoo.alarm.repository.CategoryJPARepository;
 import com.team.youarelikemetoo.alarm.repository.mybatis.MyBatisAlarmMessageRepository;
@@ -83,9 +84,11 @@ public class AlarmService {
 
 
     @LogExecutionTime
-    public ResponseEntity<?> getAlarmMessage(Long userId) {
-        AlarmMessageDTO dto = myBatisAlarmMessageRepository.findRandomMessageByUserId(userId)
+    public ResponseEntity<?> getAlarmMessage(Long userId, String alarmTime) {
+        TimeLabel timeLabel = TimeLabel.from(alarmTime);
+        AlarmMessageDTO dto = myBatisAlarmMessageRepository.findRandomMessageByUserId(userId, timeLabel)
                 .orElseThrow(() -> new RuntimeException("AlarmMessage Not Found"));
+
 
         String alarmMessage = buildAlarmMessage(dto);
 
