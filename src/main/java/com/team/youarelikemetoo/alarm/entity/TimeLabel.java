@@ -30,8 +30,12 @@ public enum TimeLabel {
         String[] temp = alarmTime.split("-");
         LocalTime time = LocalTime.of(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
 
+        return from(time);
+    }
+
+    public static TimeLabel from(LocalTime alarmTime){
         for(TimeLabel label : values()){
-            if(label.isWithin(time)){
+            if(label.isWithin(alarmTime)){
                 return label;
             }
         }

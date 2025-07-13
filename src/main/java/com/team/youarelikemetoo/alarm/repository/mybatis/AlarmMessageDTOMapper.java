@@ -13,6 +13,6 @@ import java.util.Optional;
 @Mapper
 public interface AlarmMessageDTOMapper {
     List<AlarmMessageDTO> findRandomMessageByUserId(@Param("userId") Long userId, @Param("timeLabel") TimeLabel timeLabel);
-    List<AlarmMessageDTO> findRandomUserByUserId(@Param("userId") Long userId);
+    List<AlarmMessageDTO> findRandomUserByUserId(@Param("userId") Long userId, @Param("timeLabel") TimeLabel timeLabel);
     List<String> findRandomAlarmMessageTemplate(@Param("categoryId")Long categoryId,@Param("timeLabel") TimeLabel timeLabel);
 }

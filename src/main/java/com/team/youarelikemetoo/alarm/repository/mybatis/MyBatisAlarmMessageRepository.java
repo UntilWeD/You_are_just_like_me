@@ -19,8 +19,8 @@ public class MyBatisAlarmMessageRepository {
     public List<AlarmMessageDTO> findRandomMessageByUserId(Long userId, TimeLabel timeLabel){
         return mapper.findRandomMessageByUserId(userId, timeLabel);
     }
-    public List<AlarmMessageDTO> findRandomUserByUserId(Long userId){
-        return mapper.findRandomUserByUserId(userId);
+    public List<AlarmMessageDTO> findRandomUserByUserId(Long userId, TimeLabel timeLabel){
+        return mapper.findRandomUserByUserId(userId, timeLabel);
     }
 
     public List<String> findRandomAlarmMessageTemplate(Long categoryId, TimeLabel timeLabel){

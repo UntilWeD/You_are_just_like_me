@@ -30,7 +30,7 @@
             a.category_id as categoryId
         FROM alarm a
                  INNER JOIN User u ON a.creator_id = u.user_id
-        WHERE a.creator_id != #{userId}
+        WHERE a.creator_id != #{userId} AND a.time_label = #{timeLabel}
         ORDER BY RAND()
             LIMIT 3;
     </select>

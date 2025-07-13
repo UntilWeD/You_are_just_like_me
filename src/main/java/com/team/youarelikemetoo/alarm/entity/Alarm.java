@@ -40,6 +40,9 @@ public class Alarm {
     @Column(name = "time")
     private LocalTime time;
 
+    @Column(name = "time_label")
+    private TimeLabel timeLabel;
+
     // EX) 0,1,2,3,4,5,6 (0 = 일요일, 6 = 토요일)
     @Convert(converter = DayOfWeekConverter.class)
     @Column(name = "dayofweek")
@@ -49,12 +52,14 @@ public class Alarm {
     private boolean isRepeating;
 
     @Builder
-    public Alarm(Category category, UserEntity user, String title, String description, LocalTime time, List<Integer> dayOfWeek, boolean isRepeating) {
+    public Alarm(Category category, UserEntity user, String title, String description, LocalTime time, TimeLabel timeLabel,
+                 List<Integer> dayOfWeek, boolean isRepeating) {
         this.category = category;
         this.user = user;
         this.title = title;
         this.description = description;
         this.time = time;
+        this.timeLabel = timeLabel;
         this.dayOfWeek = dayOfWeek;
         this.isRepeating = isRepeating;
     }
@@ -65,6 +70,8 @@ public class Alarm {
         this.description = alarmDTO.getDescription();
         this.category = category;
         this.time = alarmDTO.getTime();
+        this.timeLabel = TimeLabel.from(time);
+
         this.dayOfWeek = alarmDTO.getDayOfWeek();
         this.isRepeating = alarmDTO.isRepeating();
     }

@@ -2,6 +2,7 @@ package com.team.youarelikemetoo.alarm.dto;
 
 import com.team.youarelikemetoo.alarm.entity.Alarm;
 import com.team.youarelikemetoo.alarm.entity.Category;
+import com.team.youarelikemetoo.alarm.entity.TimeLabel;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -25,6 +26,7 @@ public class AlarmDTO {
     private String category;
 
     private LocalTime time;
+    private TimeLabel timeLabel;
 
     private List<Integer> dayOfWeek;
 
@@ -37,6 +39,7 @@ public class AlarmDTO {
                 .category(category)
                 .user(user)
                 .time(this.time)
+                .timeLabel(TimeLabel.from(time))
                 .dayOfWeek(this.dayOfWeek)
                 .isRepeating(this.isRepeating)
                 .build();
@@ -48,6 +51,7 @@ public class AlarmDTO {
                 .title(alarm.getTitle())
                 .description(alarm.getDescription())
                 .time(alarm.getTime())
+                .timeLabel(alarm.getTimeLabel())
                 .dayOfWeek(alarm.getDayOfWeek())
                 .isRepeating(alarm.isRepeating())
                 .build();

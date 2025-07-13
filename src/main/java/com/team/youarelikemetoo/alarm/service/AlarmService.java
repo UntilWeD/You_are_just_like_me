@@ -90,11 +90,11 @@ public class AlarmService {
     public ResponseEntity<?> getAlarmMessage(Long userId, String alarmTime) {
         TimeLabel timeLabel = TimeLabel.from(alarmTime);
 
-        List<AlarmMessageDTO> alarmMessageDTOList = myBatisAlarmMessageRepository.findRandomUserByUserId(userId);
+        List<AlarmMessageDTO> alarmMessageDTOList = myBatisAlarmMessageRepository.findRandomUserByUserId(userId, timeLabel);
         long categoryId = alarmMessageDTOList.get(0).getCategoryId();
         List<String> alarmMessageTemplates = myBatisAlarmMessageRepository.findRandomAlarmMessageTemplate(categoryId, timeLabel);
 
-        for (int i=0; i <3; i++){
+        for (int i=0; i <alarmMessageDTOList.size(); i++){
             AlarmMessageDTO dto = alarmMessageDTOList.get(i);
             dto.setMessageTemplate(alarmMessageTemplates.get(i));
         }
@@ -105,7 +105,7 @@ public class AlarmService {
 
         // 성능을 위해 알람 인스턴스 저장은 비동기 처리
         // 또한 단일책임원칙을 위해 역할을 분리하기도 위함
-//        alarmHistoryService.saveAlarmInstanceAsync(userId, dto.getSourceAlarmId(),alarmMessage);
+        alarmHistoryService.saveAlarmInstanceAsync(userId, alarmMessageDTOList, alarmMessages);
 
         return ResponseEntity.ok(ApiResponse.success(alarmMessages));
     }
