@@ -48,6 +48,7 @@ public class AlarmService {
 
 
         Alarm savedAlarm = alarmJPARepository.save(alarmDTO.toEntity(user, category));
+
         return ResponseEntity.ok(ApiResponse.success(savedAlarm.getId()));
     }
 

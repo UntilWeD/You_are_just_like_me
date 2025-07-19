@@ -27,7 +27,7 @@ public enum TimeLabel {
 
     public static TimeLabel from(String alarmTime){
 
-        String[] temp = alarmTime.split("-");
+        String[] temp = alarmTime.split(":");
         LocalTime time = LocalTime.of(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
 
         return from(time);

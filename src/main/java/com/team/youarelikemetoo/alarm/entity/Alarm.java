@@ -41,6 +41,7 @@ public class Alarm {
     private LocalTime time;
 
     @Column(name = "time_label")
+    @Enumerated(EnumType.STRING)
     private TimeLabel timeLabel;
 
     // EX) 0,1,2,3,4,5,6 (0 = 일요일, 6 = 토요일)
