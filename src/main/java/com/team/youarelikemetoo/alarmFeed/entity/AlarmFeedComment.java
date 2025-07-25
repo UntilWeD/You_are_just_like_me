@@ -11,7 +11,7 @@ import lombok.*;
 public class AlarmFeedComment {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alarm_feed_comment_id")
     private int id;
 

@@ -11,7 +11,7 @@ import lombok.*;
 public class AlarmFeedShare {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alarm_feed_share_id")
     private Long id;
 

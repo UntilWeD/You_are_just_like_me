@@ -10,27 +10,23 @@ import lombok.*;
 public class AlarmFeedImage {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alarm_feed_image_id")
     private int id;
 
     @Column(name = "original_filename")
     private String originalFilename;
 
-    @Column(name = "unique_filename")
-    private String uniqueFilename;
-
     @Column(name = "image_path")
     private String imagePath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alarm_feed_id")
     private AlarmFeed alarmFeed;
 
     @Builder
-    public AlarmFeedImage(String originalFilename, String uniqueFilename, String imagePath, AlarmFeed alarmFeed) {
+    public AlarmFeedImage(String originalFilename, String imagePath, AlarmFeed alarmFeed) {
         this.originalFilename = originalFilename;
-        this.uniqueFilename = uniqueFilename;
         this.imagePath = imagePath;
         this.alarmFeed = alarmFeed;
     }
