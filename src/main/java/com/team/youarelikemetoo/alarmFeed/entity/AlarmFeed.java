@@ -65,4 +65,20 @@ public class AlarmFeed {
         this.shareCount = shareCount;
         this.user = user;
     }
+
+    public void addLikeCount(){
+        this.likeCount++;
+    }
+
+    public void minusLikeCount(){
+        this.likeCount--;
+    }
+
+    public void addShareCount() {
+        this.shareCount++;
+    }
+
+    public void minusShareCount(){
+        this.shareCount--;
+    }
 }

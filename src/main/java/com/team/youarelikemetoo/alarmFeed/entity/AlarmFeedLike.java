@@ -28,4 +28,5 @@ public class AlarmFeedLike {
         this.alarmFeed = alarmFeed;
         this.user = user;
     }
+
 }

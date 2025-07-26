@@ -2,13 +2,10 @@ package com.team.youarelikemetoo.alarmFeed.controller;
 
 
 import com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedDTO;
-import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeed;
 import com.team.youarelikemetoo.alarmFeed.service.AlarmFeedService;
 import com.team.youarelikemetoo.auth.dto.CustomUserDetails;
 import com.team.youarelikemetoo.global.util.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +20,6 @@ import java.util.List;
 public class AlarmFeedController {
 
     private final AlarmFeedService alarmFeedService;
-
 
     @Operation(summary = "알람 피드를 저장합니다.", description = "요청한 알람피드를 저장합니다.")
     @PostMapping
@@ -58,6 +54,20 @@ public class AlarmFeedController {
         return ResponseEntity.ok(ApiResponse.success(alarmFeedId + " 의 알람피드가 정상적으로 삭제되었습니다."));
     }
 
+
+    @Operation(summary = "해당 Id의 알람 피드에 좋아요 횟수를 증가시킵니다.", description = "요청한 id의 알람피드에 대한 좋아요 기록을 저장합니다.")
+    @GetMapping("/{alarmFeedId}/like")
+    public ResponseEntity<?> getLikeAlarmFeedRequest(@PathVariable Long alarmFeedId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        alarmFeedService.addAlarmFeedLike(alarmFeedId, customUserDetails.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(  alarmFeedId + " 의 좋아요 변경사항이 적용되었습니다."));
+    }
+
+    @Operation(summary = "해당 Id의 알람 피드를 공유합니다.", description = "요청한 id의 알람피드를 공유하고 공유 기록을 저장합니다. ")
+    @GetMapping("/{alarmFeedId}/share")
+    public ResponseEntity<?> getShareAlarmFeedRequest(@PathVariable Long alarmFeedId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+        alarmFeedService.shareAlarmFeed(alarmFeedId, customUserDetails.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(  alarmFeedId + " 의 좋아요 변경사항이 적용되었습니다."));
+    }
 
 
 }

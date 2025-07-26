@@ -1,5 +1,6 @@
 package com.team.youarelikemetoo.alarmFeed.entity;
 
+import com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedCommentDTO;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,7 @@ public class AlarmFeedComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alarm_feed_comment_id")
-    private int id;
+    private Long id;
 
     private String content;
 
@@ -30,5 +31,9 @@ public class AlarmFeedComment {
         this.content = content;
         this.alarmFeed = alarmFeed;
         this.user = user;
+    }
+
+    public void updateAlarmFeedComment(AlarmFeedCommentDTO dto){
+        this.content = dto.getContent();
     }
 }
