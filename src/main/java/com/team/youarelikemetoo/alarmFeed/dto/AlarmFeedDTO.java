@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AlarmFeedDTO {
 
-    private int id;
+    private Long id;
     private String feedContent;
     private List<String> imageUrls;
 
@@ -51,10 +51,11 @@ public class AlarmFeedDTO {
 
     public static AlarmFeedDTO fromEntity(AlarmFeed entity){
         AlarmFeedDTO dto = new AlarmFeedDTO();
+        dto.setId(entity.getId());
         dto.setFeedContent(entity.getFeedContent());
         dto.setImageUrls(
                 entity.getImages().stream()
-                        .map(AlarmFeedImage::getImagePath)
+                        .map(AlarmFeedImage::getImageUrl)
                         .toList()
         );
         dto.setTitle(entity.getTitle());

@@ -4,6 +4,7 @@ import com.team.youarelikemetoo.alarm.util.DayOfWeekConverter;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
