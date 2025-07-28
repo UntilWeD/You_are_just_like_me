@@ -36,6 +36,9 @@ public class UserEntity {
     private String job;
     private String addr;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private UserProfileImage userProfileImage;
+
     public void changeUserInfo(UserDTO userDTO){
         this.name = userDTO.getName();
         this.age = userDTO.getAge();

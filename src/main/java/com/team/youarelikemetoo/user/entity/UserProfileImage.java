@@ -1,17 +1,20 @@
-package com.team.youarelikemetoo.alarmFeed.entity;
+package com.team.youarelikemetoo.user.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Table(name = "alarm_feed_image")
+@Table(name = "user_profile_image")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class AlarmFeedImage {
+public class UserProfileImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "alarm_feed_image_id")
+    @Column(name = "user_profile_image_id")
     private Long id;
 
     @Column(name = "unique_filename")
@@ -23,16 +26,16 @@ public class AlarmFeedImage {
     @Column(name = "blob_name")
     private String blobName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "alarm_feed_id")
-    private AlarmFeed alarmFeed;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
 
     @Builder
-    public AlarmFeedImage(String uniqueFilename, String imageUrl, String blobName, AlarmFeed alarmFeed) {
+    public UserProfileImage(String uniqueFilename, String imageUrl, String blobName, UserEntity user) {
         this.uniqueFilename = uniqueFilename;
         this.imageUrl = imageUrl;
         this.blobName = blobName;
-        this.alarmFeed = alarmFeed;
+        this.user = user;
     }
 }

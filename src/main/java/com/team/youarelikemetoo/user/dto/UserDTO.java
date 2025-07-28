@@ -19,6 +19,7 @@ public class UserDTO {
     private Gender gender;
     private String job;
     private String addr;
+    private String profileImageUrl;
 
 
 
@@ -43,6 +44,7 @@ public class UserDTO {
         return user;
     }
 
+    // 유저 프로파일 이미지가 있을 시에 동적으로 변환되도록 해야함
     static public UserDTO fromEntity(UserEntity user){
         return UserDTO.builder()
                 .oauthId(user.getOauthId())
