@@ -9,7 +9,7 @@ import com.team.youarelikemetoo.user.repository.UserJPARepository;
 import com.team.youarelikemetoo.user.repository.UserProfileImageJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +44,7 @@ public class UserService {
         UserEntity user = userJPARepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new RuntimeException("user not found"));
         user.changeUserInfo(userDTO);
+
         UserDTO dto = UserDTO.fromEntity(user);
 
         // 1-1. 추가하려는 이미지가 있고 기존 이미지가 있으면 삭제
@@ -52,6 +53,7 @@ public class UserService {
             String folderPath = "UserProfile/" + user.getId();
             azureBlobService.deleteFolder(folderPath);
             userProfileImageJpaRepository.delete(existing);
+            user.setUserProfileImage(null);
         }
 
         // 2. 유저 프로필 사진 존재시 추가
@@ -71,8 +73,19 @@ public class UserService {
             dto.setProfileImageUrl(imageUrl);
         }
 
-
         return dto;
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        UserEntity user = userJPARepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("user not found"));
+        userJPARepository.delete(user);
+
+        if(user.getUserProfileImage() != null){
+            String folderPath = "UserProfile/" + user.getId();
+            azureBlobService.deleteFolder(folderPath);
+        }
+        return;
+    }
 }

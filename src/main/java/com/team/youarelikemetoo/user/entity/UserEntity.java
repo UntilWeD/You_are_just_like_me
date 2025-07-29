@@ -36,7 +36,7 @@ public class UserEntity {
     private String job;
     private String addr;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserProfileImage userProfileImage;
 
     public void changeUserInfo(UserDTO userDTO){

@@ -18,17 +18,16 @@ public class Follow {
     @Column(name = "follow_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_id")
-    private UserEntity follower;
+    @Column(name = "follower_id")
+    private Long followerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id")
-    private UserEntity following; // 상대
+
+    @Column(name = "following_id")
+    private Long followingId; // 상대
 
     @Builder
-    public Follow(UserEntity follower, UserEntity following) {
-        this.follower = follower;
-        this.following = following;
+    public Follow(Long followerId, Long followingId) {
+        this.followerId = followerId;
+        this.followingId = followingId;
     }
 }

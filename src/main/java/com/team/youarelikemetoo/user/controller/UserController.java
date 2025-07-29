@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Tag(name = "User", description = "사용자 API")
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -42,6 +42,14 @@ public class UserController {
         UserDTO savedUserDTO = userService.saveUser(dto, imageFile, customUserDetails.getOauthId());
 
         return ResponseEntity.ok(ApiResponse.success(savedUserDTO));
+    }
+
+    @DeleteMapping
+    @Operation(summary = "유저를 삭제합니다.", description = "해당 유저의 정보를 삭제합니다.")
+    public ResponseEntity<> getDeleteUserRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        Long userId = customUserDetails.getUserId();
+        userService.deleteUser(userId);
+        return ResponseEntity.ok(ApiResponse.success( userId+ "의 유저가 정상적으로 삭제되었습니다."));
     }
 
 }
