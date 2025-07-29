@@ -46,7 +46,7 @@ public class UserController {
 
     @DeleteMapping
     @Operation(summary = "유저를 삭제합니다.", description = "해당 유저의 정보를 삭제합니다.")
-    public ResponseEntity<> getDeleteUserRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<?> getDeleteUserRequest(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         Long userId = customUserDetails.getUserId();
         userService.deleteUser(userId);
         return ResponseEntity.ok(ApiResponse.success( userId+ "의 유저가 정상적으로 삭제되었습니다."));

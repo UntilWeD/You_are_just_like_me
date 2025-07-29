@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.youarelikemetoo.user.repository.mybatis.UserSimpleProfileMapper">
+
+
+    <select id="findFollowerAsUserSimpleProfileByFollowerId" resultType="UserSimpleProfile">
+        SELECT
+            u.user_id AS id, u.name, i.image_url
+        FROM follow f
+                 INNER JOIN user u
+                            ON f.following_id = u.user_id
+                 LEFT JOIN user_profile_image i
+                           ON u.user_id = i.user_id
+        WHERE f.follower_id = #{followerId};
+    </select>
+
+    <select id="getFollowerRecommendation" resultType="UserSimpleProfile">
+        SELECT DISTINCT u.user_id, u.name, i.image_url -- 팔로잉한 사람을 조회한다.
+                FROM Follow f1
+                         JOIN Follow f2 ON f1.follower_id = f2.follower_id
+                         JOIN User u ON f2.following_id = u.user_id
+                         LEFT JOIN user_profile_image i ON u.user_id = i.user_id
+                WHERE f1.following_id = #{followerId} -- 나를 팔로잉한 사람이
+                  AND f2.following_id != #{followerId} -- 나 자신을 제외하고
+          AND f2.following_id NOT IN (
+            SELECT following_id FROM Follow WHERE follower_id = #{followerId}
+          ) -- 내가 이미 팔로잉하지 않은 사람을
+        LIMIT 10;
+    </select>
+
+</mapper>
