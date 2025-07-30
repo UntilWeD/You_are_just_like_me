@@ -1,10 +1,8 @@
 package com.team.youarelikemetoo.alarmFeed.service;
 
-import com.team.youarelikemetoo.user.dto.UserDTO;
 import com.team.youarelikemetoo.user.dto.UserSimpleProfile;
 import com.team.youarelikemetoo.user.repository.FollowJpaRepository;
 import com.team.youarelikemetoo.user.entity.Follow;
-import com.team.youarelikemetoo.user.repository.UserJPARepository;
 import com.team.youarelikemetoo.user.repository.mybatis.MyBatisFollowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

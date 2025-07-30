@@ -14,4 +14,6 @@ public interface AlarmFeedJPARepository extends JpaRepository<AlarmFeed, Long> {
     @Query("SELECT af FROM AlarmFeed af LEFT JOIN FETCH af.images WHERE af.id = :id")
     Optional<AlarmFeed> findByIdWithImages(@Param("id") Long id);
 
+
+
 }

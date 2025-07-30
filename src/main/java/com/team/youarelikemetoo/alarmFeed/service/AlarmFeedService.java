@@ -141,4 +141,10 @@ public class AlarmFeedService {
 
         return;
     }
+
+    public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeek(List<Integer> dayOfWeek) {
+//        alarmFeedJPARepository.save();
+
+        return null;
+    }
 }

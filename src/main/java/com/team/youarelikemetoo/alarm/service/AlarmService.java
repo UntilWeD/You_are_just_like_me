@@ -2,10 +2,7 @@ package com.team.youarelikemetoo.alarm.service;
 
 import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
 import com.team.youarelikemetoo.alarm.dto.AlarmMessageDTO;
-import com.team.youarelikemetoo.alarm.entity.Alarm;
-import com.team.youarelikemetoo.alarm.entity.AlarmMessageTemplate;
-import com.team.youarelikemetoo.alarm.entity.Category;
-import com.team.youarelikemetoo.alarm.entity.TimeLabel;
+import com.team.youarelikemetoo.alarm.entity.*;
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
 import com.team.youarelikemetoo.alarm.repository.CategoryJPARepository;
 import com.team.youarelikemetoo.alarm.repository.mybatis.MyBatisAlarmMessageRepository;
@@ -24,11 +21,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AlarmService {
 
     private final AlarmJPARepository alarmJPARepository;
@@ -37,6 +34,7 @@ public class AlarmService {
     private final MyBatisAlarmMessageRepository myBatisAlarmMessageRepository;
     private final AlarmHistoryService alarmHistoryService;
 
+    @Transactional
     public ResponseEntity<?> saveAlarm(AlarmDTO alarmDTO, Long userId){
         log.info(alarmDTO.toString());
 
@@ -47,7 +45,17 @@ public class AlarmService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
 
-        Alarm savedAlarm = alarmJPARepository.save(alarmDTO.toEntity(user, category));
+        Alarm savedAlarm = alarmDTO.toEntity(user, category);
+
+        List<AlarmDay> alarmDays = alarmDTO.getAlarmDays().stream()
+                .map(day -> AlarmDay.builder()
+                        .alarm(savedAlarm)
+                        .dayOfWeek(day)
+                        .build())
+                .collect(Collectors.toList());
+        savedAlarm.updateAlarmDays(alarmDays);
+
+        alarmJPARepository.save(savedAlarm);
 
         return ResponseEntity.ok(ApiResponse.success(savedAlarm.getId()));
     }
@@ -56,6 +64,7 @@ public class AlarmService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAlarm(Long alarmId) {
         Optional<Alarm> alarm = alarmJPARepository.findById(alarmId);
+
         if(alarm.isPresent()){
 
             AlarmDTO alarmDTO = AlarmDTO.fromEntity(alarm.get());
@@ -68,8 +77,18 @@ public class AlarmService {
     }
 
 
+    @Transactional
     public ResponseEntity<?> updateAlarm(Long alarmId, AlarmDTO alarmDTO){
         Optional<Alarm> alarm = alarmJPARepository.findById(alarmId);
+
+        List<AlarmDay> alarmDays = alarmDTO.getAlarmDays().stream()
+                .map(day -> AlarmDay.builder()
+                        .alarm(alarm.get())
+                        .dayOfWeek(day)
+                        .build())
+                .collect(Collectors.toList());
+        alarm.get().updateAlarmDays(alarmDays);
+
 
         if(alarm.isPresent()){
             Category category = categoryJPARepository.findByCategoryName(alarmDTO.getCategory())

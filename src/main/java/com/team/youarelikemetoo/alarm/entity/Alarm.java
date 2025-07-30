@@ -45,25 +45,25 @@ public class Alarm {
     private TimeLabel timeLabel;
 
     // EX) 0,1,2,3,4,5,6 (0 = 일요일, 6 = 토요일)
-    @Convert(converter = DayOfWeekConverter.class)
-    @Column(name = "dayofweek")
-    private List<Integer> dayOfWeek;
+    @OneToMany(mappedBy = "alarm", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AlarmDay> alarmDays;
 
     @Column(name = "isrepeating")
     private boolean isRepeating;
 
     @Builder
     public Alarm(Category category, UserEntity user, String title, String description, LocalTime time, TimeLabel timeLabel,
-                 List<Integer> dayOfWeek, boolean isRepeating) {
+                 List<AlarmDay> alarmDays, boolean isRepeating) {
         this.category = category;
         this.user = user;
         this.title = title;
         this.description = description;
         this.time = time;
         this.timeLabel = timeLabel;
-        this.dayOfWeek = dayOfWeek;
+        this.alarmDays = alarmDays;
         this.isRepeating = isRepeating;
     }
+
 
 
     public void updateAlarmStatus(AlarmDTO alarmDTO, Category category){
@@ -72,8 +72,11 @@ public class Alarm {
         this.category = category;
         this.time = alarmDTO.getTime();
         this.timeLabel = TimeLabel.from(time);
-
-        this.dayOfWeek = alarmDTO.getDayOfWeek();
         this.isRepeating = alarmDTO.isRepeating();
+    }
+
+    public void updateAlarmDays(List<AlarmDay> alarmDays){
+        this.alarmDays.clear();
+        this.alarmDays.addAll(alarmDays);
     }
 }

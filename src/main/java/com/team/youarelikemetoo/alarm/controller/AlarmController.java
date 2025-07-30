@@ -35,7 +35,7 @@ public class AlarmController {
             responseCode = "200", description = "알람 조회 성공",
             content = @Content(schema = @Schema(implementation = AlarmDTO.class))
     )
-    @GetMapping("/{alarmId:\\\\d+}")
+    @GetMapping("/{alarmId}")
     public ResponseEntity<?> getReadAlarmRequest(@PathVariable Long alarmId){
         return alarmService.getAlarm(alarmId);
     }

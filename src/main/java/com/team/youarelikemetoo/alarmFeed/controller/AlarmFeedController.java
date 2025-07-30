@@ -6,6 +6,7 @@ import com.team.youarelikemetoo.alarmFeed.service.AlarmFeedService;
 import com.team.youarelikemetoo.auth.dto.CustomUserDetails;
 import com.team.youarelikemetoo.global.util.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -67,6 +68,14 @@ public class AlarmFeedController {
     public ResponseEntity<?> getShareAlarmFeedRequest(@PathVariable Long alarmFeedId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
         alarmFeedService.shareAlarmFeed(alarmFeedId, customUserDetails.getUserId());
         return ResponseEntity.ok(ApiResponse.success(  alarmFeedId + " 의 좋아요 변경사항이 적용되었습니다."));
+    }
+
+    @Operation(summary = "요일에 따라 해당하는 알람피드들을 반환합니다.",
+            description = "해당하는 요일 리스트가 오면 이와 같은 요일리스트를 가진 행들을 조회하여 10개의 항목이 있는 리스트 형태로 반환합니다.")
+    @PostMapping("/dow")
+    public ResponseEntity<?> getAlarmFeedsByDayOfWeekRequest(@RequestBody List<Integer> dayOfWeek){
+        List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeek(dayOfWeek);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
 
