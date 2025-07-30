@@ -79,4 +79,8 @@ public class Alarm {
         this.alarmDays.clear();
         this.alarmDays.addAll(alarmDays);
     }
+
+    public void saveAlarmDays(List<AlarmDay> alarmDays) {
+        this.alarmDays = alarmDays;
+    }
 }

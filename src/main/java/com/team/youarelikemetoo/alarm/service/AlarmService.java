@@ -53,7 +53,7 @@ public class AlarmService {
                         .dayOfWeek(day)
                         .build())
                 .collect(Collectors.toList());
-        savedAlarm.updateAlarmDays(alarmDays);
+        savedAlarm.saveAlarmDays(alarmDays);
 
         alarmJPARepository.save(savedAlarm);
 

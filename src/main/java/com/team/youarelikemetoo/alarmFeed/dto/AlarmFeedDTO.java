@@ -10,6 +10,7 @@ import lombok.*;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -28,7 +29,7 @@ public class AlarmFeedDTO {
 
     private LocalTime time;
 
-    private List<Integer> dayOfWeek;
+    private List<Integer> alarmFeedDays;
 
     private boolean isRepeating;
     private int likeCount;
@@ -40,7 +41,6 @@ public class AlarmFeedDTO {
                 .title(this.title)
                 .description(this.description)
                 .time(this.time)
-                .dayOfWeek(this.dayOfWeek)
                 .isRepeating(this.isRepeating)
                 .likeCount(this.likeCount)
                 .shareCount(this.shareCount)
@@ -61,7 +61,9 @@ public class AlarmFeedDTO {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setTime(entity.getTime());
-        dto.setDayOfWeek(entity.getDayOfWeek());
+        dto.setAlarmFeedDays(entity.getAlarmFeedDays().stream().map(
+                day -> day.getDayOfWeek()).collect(Collectors.toList())
+        );
         dto.setRepeating(dto.isRepeating);
         dto.setLikeCount(dto.getLikeCount());
         dto.setShareCount(dto.getShareCount());

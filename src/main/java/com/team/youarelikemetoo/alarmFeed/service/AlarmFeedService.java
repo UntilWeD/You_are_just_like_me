@@ -2,10 +2,7 @@ package com.team.youarelikemetoo.alarmFeed.service;
 
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
 import com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedDTO;
-import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeed;
-import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeedImage;
-import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeedLike;
-import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeedShare;
+import com.team.youarelikemetoo.alarmFeed.entity.*;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedJPARepository;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedLikeJpaRepository;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedShareJpaRepository;
@@ -40,9 +37,20 @@ public class AlarmFeedService {
         UserEntity user = userJPARepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        AlarmFeed alarmFeed =  alarmFeedJPARepository.save(dto.toEntity(user));
+        AlarmFeed alarmFeed = dto.toEntity(user);
+        List<AlarmFeedDay> alarmFeedDays = dto.getAlarmFeedDays().stream()
+                .map(day -> AlarmFeedDay.builder()
+                        .alarmFeed(alarmFeed)
+                        .dayOfWeek(day)
+                        .build())
+                .collect(Collectors.toList());
+        alarmFeed.saveAlarmFeedDays(alarmFeedDays);
 
+
+
+        alarmFeedJPARepository.save(alarmFeed);
         if(imageFiles != null && !imageFiles.isEmpty()){
+            log.info(imageFiles.get(0).getOriginalFilename());
             List<AlarmFeedImage> imageEntities = imageFiles.stream()
                     .map(file -> {
                         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -143,8 +151,12 @@ public class AlarmFeedService {
     }
 
     public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeek(List<Integer> dayOfWeek) {
-//        alarmFeedJPARepository.save();
+        log.info("요청된 dayOfWeek: {}", dayOfWeek);
+        List<AlarmFeed> alarmFeeds = alarmFeedJPARepository.findByDayOfWeekIn(dayOfWeek);
+        log.info("조회된 AlarmFeed 개수: {}", alarmFeeds.size());
 
-        return null;
+        return alarmFeeds.stream()
+                .map(AlarmFeedDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }

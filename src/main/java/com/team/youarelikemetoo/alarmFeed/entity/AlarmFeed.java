@@ -4,7 +4,6 @@ import com.team.youarelikemetoo.alarm.util.DayOfWeekConverter;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -33,9 +32,8 @@ public class AlarmFeed {
     @Column(name = "time")
     private LocalTime time;
 
-    @Convert(converter = DayOfWeekConverter.class)
-    @Column(name = "dayofweek")
-    private List<Integer> dayOfWeek;
+    @OneToMany(mappedBy = "alarmFeed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AlarmFeedDay> alarmFeedDays;
 
     @Column(name = "isrepeating")
     private boolean isRepeating;
@@ -54,17 +52,29 @@ public class AlarmFeed {
     private UserEntity user;
 
     @Builder
-    public AlarmFeed(String feedContent, String title, String description, LocalTime time, List<Integer> dayOfWeek, boolean isRepeating, int likeCount, int shareCount, UserEntity user) {
+    public AlarmFeed(String feedContent, String title, String description, LocalTime time, List<AlarmFeedDay> alarmFeedDays, boolean isRepeating, int likeCount, int shareCount, List<AlarmFeedImage> images, UserEntity user) {
         this.feedContent = feedContent;
         this.title = title;
         this.description = description;
         this.time = time;
-        this.dayOfWeek = dayOfWeek;
+        this.alarmFeedDays = alarmFeedDays;
         this.isRepeating = isRepeating;
         this.likeCount = likeCount;
         this.shareCount = shareCount;
+        this.images = images != null ? images : new ArrayList<>();
         this.user = user;
     }
+
+    public void saveAlarmFeedDays(List<AlarmFeedDay> alarmFeedDays){
+        this.alarmFeedDays = alarmFeedDays;
+    }
+
+    public void updateAlarmFeedDays(List<AlarmFeedDay> alarmFeedDays){
+        this.alarmFeedDays.clear();
+        this.alarmFeedDays.addAll(alarmFeedDays);
+    }
+
+
 
     public void addLikeCount(){
         this.likeCount++;
