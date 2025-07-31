@@ -20,4 +20,8 @@ public interface AlarmFeedJPARepository extends JpaRepository<AlarmFeed, Long> {
             "WHERE afd.dayOfWeek IN :dayOfWeek")
     List<AlarmFeed> findByDayOfWeekIn(@Param("dayOfWeek") List<Integer> dayOfWeek);
 
+    @Query("SELECT DISTINCT af FROM AlarmFeed af " +
+            "JOIN af.alarmFeedDays afd " +
+            "WHERE afd.dayOfWeek IN :dayOfWeek AND af.user.id = :userId")
+    List<AlarmFeed> findByDayOfWeekInAndUserId(@Param("dayOfWeek") List<Integer> dayOfWeek, @Param("userId") Long userId);
 }

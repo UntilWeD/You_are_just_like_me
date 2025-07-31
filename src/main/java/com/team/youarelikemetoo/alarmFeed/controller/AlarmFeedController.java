@@ -68,6 +68,17 @@ public class AlarmFeedController {
         return ResponseEntity.ok(ApiResponse.success(alarmFeedDTOS));
     }
 
+    @Operation(summary = "요일에 따라 해당하는 내 알람피드들을 반환합니다.",
+            description = "해당하는 요일 리스트와 jwt토큰으로부터 userId를 추출하여 그 값들을 기반으로 알람피드들을 조회하여 반환합니다.")
+    @PostMapping("/by-day-userId")
+    public ResponseEntity<?> getMyAlarmFeedByDayOfWeekAndUserIdRequest(@RequestBody DayOfWeekRequest request,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeekAndUserId(
+                request.getDayOfWeek(), customUserDetails.getUserId()
+        );
+        return ResponseEntity.ok(ApiResponse.success(alarmFeedDTOS));
+    }
+
 
     // ------ 좋아요 ------
     @Operation(summary = "해당 Id의 알람 피드에 좋아요 횟수를 증가시킵니다.", description = "요청한 id의 알람피드에 대한 좋아요 기록을 저장합니다.")

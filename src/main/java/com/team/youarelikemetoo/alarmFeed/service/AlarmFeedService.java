@@ -159,4 +159,13 @@ public class AlarmFeedService {
                 .map(AlarmFeedDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
+
+    public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeekAndUserId(List<Integer> dayOfWeek, Long userId) {
+        List<AlarmFeed> alarmFeeds = alarmFeedJPARepository.findByDayOfWeekInAndUserId(dayOfWeek, userId);
+
+        return alarmFeeds.stream()
+                .map(AlarmFeedDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 }
