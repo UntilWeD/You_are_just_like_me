@@ -10,6 +10,7 @@ services:
       - DB_URL=${DB_URL}
       - DB_NAME=${DB_NAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - AZURE_BLOB_CON=${AZURE_BLOB_CON}
 
   redis:
     image: redis:7
