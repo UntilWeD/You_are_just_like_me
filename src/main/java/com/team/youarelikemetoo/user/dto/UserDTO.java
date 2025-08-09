@@ -19,6 +19,8 @@ public class UserDTO {
     private Gender gender;
     private String job;
     private String addr;
+    private String instagramId;
+    private String introduction;
     private String profileImageUrl;
 
 
@@ -29,6 +31,8 @@ public class UserDTO {
         user.setOauthProvider(oauthProvider);
         user.setOauthId(oauthId);
         user.setRole(role);
+        user.setInstagramId(instagramId);
+        user.setIntroduction(introduction);
 
         // null-safe: null이거나 유효한 값만 set
         if (age != null && age > 0 && age < 150) {
@@ -55,6 +59,8 @@ public class UserDTO {
                 .gender(user.getGender())
                 .job(user.getJob())
                 .addr(user.getAddr())
+                .instagramId(user.getInstagramId())
+                .introduction(user.getIntroduction())
                 .build();
     }
 

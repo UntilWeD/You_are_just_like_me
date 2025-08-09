@@ -36,6 +36,12 @@ public class UserEntity {
     private String job;
     private String addr;
 
+    @Column(name = "instagram_id")
+    private String instagramId;
+
+    @Column(name = "introduction")
+    private String introduction;
+
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserProfileImage userProfileImage;
 
@@ -45,6 +51,8 @@ public class UserEntity {
         this.gender = userDTO.getGender();
         this.job = userDTO.getJob();
         this.addr = userDTO.getAddr();
+        this.instagramId = userDTO.getInstagramId();
+        this.introduction = userDTO.getIntroduction();
 
         return;
     }
