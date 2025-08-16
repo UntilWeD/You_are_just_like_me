@@ -31,6 +31,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> getUserInfo(String oauthId){
+        log.info(oauthId);
         UserEntity user = userJPARepository.findByOauthId(oauthId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 

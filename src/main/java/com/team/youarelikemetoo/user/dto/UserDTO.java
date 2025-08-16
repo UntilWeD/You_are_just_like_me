@@ -59,6 +59,11 @@ public class UserDTO {
                 .gender(user.getGender())
                 .job(user.getJob())
                 .addr(user.getAddr())
+                .profileImageUrl(
+                        user.getUserProfileImage() != null
+                                ? user.getUserProfileImage().getImageUrl()
+                                : null
+                )
                 .instagramId(user.getInstagramId())
                 .introduction(user.getIntroduction())
                 .build();
