@@ -32,7 +32,8 @@ public class AlarmDTO {
 
     private List<Integer> alarmDays;
 
-    private boolean isRepeating;
+    private int repeatCount;
+    private int timeInterval;
 
     public Alarm toEntity(UserEntity user, Category category){
         Alarm alarm = Alarm.builder()
@@ -42,7 +43,8 @@ public class AlarmDTO {
                 .user(user)
                 .time(this.time)
                 .timeLabel(TimeLabel.from(time))
-                .isRepeating(this.isRepeating)
+                .repeatCount(this.repeatCount)
+                .timeInterval(this.timeInterval)
                 .build();
         return alarm;
     }
@@ -55,7 +57,8 @@ public class AlarmDTO {
                 .timeLabel(entity.getTimeLabel())
                 .alarmDays(entity.getAlarmDays().stream().map(
                         day -> day.getDayOfWeek()).collect(Collectors.toList()))
-                .isRepeating(entity.isRepeating())
+                .repeatCount(entity.getRepeatCount())
+                .timeInterval(entity.getTimeInterval())
                 .build();
         return alarmDTO;
     }

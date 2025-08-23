@@ -1,7 +1,6 @@
 package com.team.youarelikemetoo.alarm.entity;
 
 import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
-import com.team.youarelikemetoo.alarm.util.DayOfWeekConverter;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -48,12 +47,15 @@ public class Alarm {
     @OneToMany(mappedBy = "alarm", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AlarmDay> alarmDays;
 
-    @Column(name = "isrepeating")
-    private boolean isRepeating;
+    @Column(name = "repeat_count")
+    private int repeatCount;
+
+    @Column(name = "time_interval")
+    private int timeInterval;
 
     @Builder
     public Alarm(Category category, UserEntity user, String title, String description, LocalTime time, TimeLabel timeLabel,
-                 List<AlarmDay> alarmDays, boolean isRepeating) {
+                 List<AlarmDay> alarmDays, int repeatCount, int timeInterval) {
         this.category = category;
         this.user = user;
         this.title = title;
@@ -61,7 +63,8 @@ public class Alarm {
         this.time = time;
         this.timeLabel = timeLabel;
         this.alarmDays = alarmDays;
-        this.isRepeating = isRepeating;
+        this.repeatCount = repeatCount;
+        this.timeInterval = timeInterval;
     }
 
 
@@ -72,7 +75,8 @@ public class Alarm {
         this.category = category;
         this.time = alarmDTO.getTime();
         this.timeLabel = TimeLabel.from(time);
-        this.isRepeating = alarmDTO.isRepeating();
+        this.repeatCount = alarmDTO.getRepeatCount();
+        this.timeInterval = alarmDTO.getTimeInterval();
     }
 
     public void updateAlarmDays(List<AlarmDay> alarmDays){
