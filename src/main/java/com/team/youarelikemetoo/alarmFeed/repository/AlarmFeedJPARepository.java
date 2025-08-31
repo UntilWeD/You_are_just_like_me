@@ -15,13 +15,23 @@ public interface AlarmFeedJPARepository extends JpaRepository<AlarmFeed, Long> {
     @Query("SELECT af FROM AlarmFeed af LEFT JOIN FETCH af.images WHERE af.id = :id")
     Optional<AlarmFeed> findByIdWithImages(@Param("id") Long id);
 
-    @Query("SELECT DISTINCT af FROM AlarmFeed af " +
-            "JOIN af.alarmFeedDays afd " +
-            "WHERE afd.dayOfWeek IN :dayOfWeek")
-    List<AlarmFeed> findByDayOfWeekIn(@Param("dayOfWeek") List<Integer> dayOfWeek);
 
-    @Query("SELECT DISTINCT af FROM AlarmFeed af " +
-            "JOIN af.alarmFeedDays afd " +
-            "WHERE afd.dayOfWeek IN :dayOfWeek AND af.user.id = :userId")
-    List<AlarmFeed> findByDayOfWeekInAndUserId(@Param("dayOfWeek") List<Integer> dayOfWeek, @Param("userId") Long userId);
+//    List<AlarmFeed> findAllByOrderByIdDesc();
+//
+//    @Query("SELECT DISTINCT af FROM AlarmFeed af " +
+//            "LEFT JOIN FETCH af.alarmFeedDays afd " +
+//            "LEFT JOIN FETCH af.images afi " +
+//            "WHERE afd.dayOfWeek IS NULL OR  afd.dayOfWeek IN :dayOfWeek")
+//    List<AlarmFeed> findByDayOfWeekIn(@Param("dayOfWeek") List<Integer> dayOfWeek);
+//
+//    @Query("SELECT DISTINCT af FROM AlarmFeed af " +
+//            "WHERE af.user.id = :userId "
+//    )
+//    List<AlarmFeed> findAllByUserId(@Param("userId") Long userId);
+//
+//    @Query("SELECT DISTINCT af FROM AlarmFeed af " +
+//            "LEFT JOIN af.alarmFeedDays afd " +
+//            "WHERE (:dayOfWeek IS NULL OR afd.dayOfWeek IN :dayOfWeek) " +
+//            "AND af.user.id = :userId")
+//    List<AlarmFeed> findByDayOfWeekInAndUserId(@Param("dayOfWeek") List<Integer> dayOfWeek, @Param("userId") Long userId);
 }

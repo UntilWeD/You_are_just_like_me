@@ -52,7 +52,7 @@ public class AlarmFeed {
     @OneToMany(mappedBy = "alarmFeed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AlarmFeedImage> images = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 

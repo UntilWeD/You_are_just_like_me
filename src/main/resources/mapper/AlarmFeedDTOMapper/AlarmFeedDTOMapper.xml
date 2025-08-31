@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.youarelikemetoo.alarmFeed.repository.mybatis.AlarmFeedMapper">
+
+    <resultMap id="AlarmFeedDTOMap" type="com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedDTO">
+        <id property="id" column="alarm_feed_id"/>
+        <result property="feedContent" column="feed_content"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="time" column="time"/>
+        <result property="repeatCount" column="repeat_count"/>
+        <result property="timeInterval" column="time_interval"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="shareCount" column="share_count"/>
+
+        <!-- List<String> imageUrls 매핑 -->
+        <collection property="imageUrls" ofType="String">
+            <result column="image_url"/>
+        </collection>
+
+        <!-- List<Integer> alarmFeedDays 매핑 -->
+        <collection property="alarmFeedDays" ofType="Integer">
+            <result column="day_of_week"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAlarmFeedsByDayOfWeek" resultMap="AlarmFeedDTOMap">
+        SELECT DISTINCT
+        af.alarm_feed_id,
+        af.feed_content,
+        af.title,
+        af.description,
+        af.time,
+        af.repeat_count,
+        af.time_interval,
+        af.like_count,
+        af.share_count,
+        afi.image_url,
+        afd.day_of_week
+        FROM alarm_feed af
+        LEFT JOIN alarm_feed_image afi ON af.alarm_feed_id = afi.alarm_feed_id
+        LEFT JOIN alarm_feed_day afd ON af.alarm_feed_id = afd.alarm_feed_id
+        <where>
+            <if test="dayOfWeek != null and dayOfWeek.size() > 0">
+                AND (afd.day_of_week IS NULL OR afd.day_of_week IN
+                <foreach collection="dayOfWeek" item="day" open="(" close=")" separator=",">
+                    #{day}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="findAlarmFeedsByDayOfWeekAndUserId" resultMap="AlarmFeedDTOMap">
+        SELECT DISTINCT
+        af.alarm_feed_id,
+        af.feed_content,
+        af.title,
+        af.description,
+        af.time,
+        af.repeat_count,
+        af.time_interval,
+        af.like_count,
+        af.share_count,
+        afi.image_url,
+        afd.day_of_week
+        FROM alarm_feed af
+        LEFT JOIN alarm_feed_image afi ON af.alarm_feed_id = afi.alarm_feed_id
+        LEFT JOIN alarm_feed_day afd ON af.alarm_feed_id = afd.alarm_feed_id
+        <where>
+            af.user_id = #{userId}
+            <if test="dayOfWeek != null and dayOfWeek.size() > 0">
+                AND (afd.day_of_week IS NULL OR afd.day_of_week IN
+                <foreach collection="dayOfWeek" item="day" open="(" close=")" separator=",">
+                    #{day}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+</mapper>

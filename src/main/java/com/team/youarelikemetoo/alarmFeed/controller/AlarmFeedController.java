@@ -59,23 +59,21 @@ public class AlarmFeedController {
 
     @Operation(summary = "요일에 따라 해당하는 알람피드들을 반환합니다.",
             description = "해당하는 요일 리스트가 오면 이와 같은 요일리스트를 가진 행들을 조회하여 10개의 항목이 있는 리스트 형태로 반환합니다.")
-    @PostMapping("/by-day")
-    public ResponseEntity<?> getAlarmFeedsByDayOfWeekRequest(@RequestBody DayOfWeekRequest request){
-        log.info("받은 요청: {}", request); // 이 로그 추가
-        log.info("dayOfWeek: {}", request.getDayOfWeek()); // 이 로그도 추가
+    @GetMapping ("/by-day")
+    public ResponseEntity<?> getAlarmFeedsByDayOfWeekRequest(@RequestParam(required = false) List<Integer> days){
+        List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeek(days);
 
-        List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeek(request.getDayOfWeek());
         return ResponseEntity.ok(ApiResponse.success(alarmFeedDTOS));
     }
 
     @Operation(summary = "요일에 따라 해당하는 내 알람피드들을 반환합니다.",
             description = "해당하는 요일 리스트와 jwt토큰으로부터 userId를 추출하여 그 값들을 기반으로 알람피드들을 조회하여 반환합니다.")
-    @PostMapping("/by-day-userId")
-    public ResponseEntity<?> getMyAlarmFeedByDayOfWeekAndUserIdRequest(@RequestBody DayOfWeekRequest request,
+    @GetMapping("/by-day-userId")
+    public ResponseEntity<?> getMyAlarmFeedByDayOfWeekAndUserIdRequest(@RequestParam(required = false)  List<Integer> days,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeekAndUserId(
-                request.getDayOfWeek(), customUserDetails.getUserId()
-        );
+        List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeekAndUserId(days, customUserDetails.getUserId());
+
+
         return ResponseEntity.ok(ApiResponse.success(alarmFeedDTOS));
     }
 

@@ -6,6 +6,7 @@ import com.team.youarelikemetoo.alarmFeed.entity.*;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedJPARepository;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedLikeJpaRepository;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedShareJpaRepository;
+import com.team.youarelikemetoo.alarmFeed.repository.mybatis.MyBatisAlarmFeedRepository;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import com.team.youarelikemetoo.user.repository.UserJPARepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class AlarmFeedService {
     private final AlarmFeedJPARepository alarmFeedJPARepository;
     private final AlarmFeedLikeJpaRepository alarmFeedLikeJpaRepository;
     private final AlarmFeedShareJpaRepository alarmFeedShareJpaRepository;
+    private final MyBatisAlarmFeedRepository myBatisAlarmFeedRepository;
 
     private final AzureBlobService azureBlobService;
 
@@ -151,21 +153,17 @@ public class AlarmFeedService {
     }
 
     public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeek(List<Integer> dayOfWeek) {
-        log.info("요청된 dayOfWeek: {}", dayOfWeek);
-        List<AlarmFeed> alarmFeeds = alarmFeedJPARepository.findByDayOfWeekIn(dayOfWeek);
-        log.info("조회된 AlarmFeed 개수: {}", alarmFeeds.size());
+        List<AlarmFeedDTO> alarmFeeds = myBatisAlarmFeedRepository.findAlarmFeedsByDayOfWeek(dayOfWeek);
 
         return alarmFeeds.stream()
-                .map(AlarmFeedDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
 
     public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeekAndUserId(List<Integer> dayOfWeek, Long userId) {
-        List<AlarmFeed> alarmFeeds = alarmFeedJPARepository.findByDayOfWeekInAndUserId(dayOfWeek, userId);
+        List<AlarmFeedDTO> alarmFeeds = myBatisAlarmFeedRepository.findAlarmFeedsByDayOfWeekAndUserId(dayOfWeek, userId);
 
         return alarmFeeds.stream()
-                .map(AlarmFeedDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 }
