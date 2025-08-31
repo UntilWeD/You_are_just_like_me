@@ -35,8 +35,13 @@ public class AlarmFeed {
     @OneToMany(mappedBy = "alarmFeed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AlarmFeedDay> alarmFeedDays;
 
-    @Column(name = "isrepeating")
-    private boolean isRepeating;
+    @Column(name = "repeat_count")
+    private int repeatCount;
+
+
+    @Column(name = "time_interval")
+    private int timeInterval;
+
 
     @Column(name = "like_count")
     private int likeCount;
@@ -52,13 +57,14 @@ public class AlarmFeed {
     private UserEntity user;
 
     @Builder
-    public AlarmFeed(String feedContent, String title, String description, LocalTime time, List<AlarmFeedDay> alarmFeedDays, boolean isRepeating, int likeCount, int shareCount, List<AlarmFeedImage> images, UserEntity user) {
+    public AlarmFeed(Long id, String feedContent, String title, String description, LocalTime time, List<AlarmFeedDay> alarmFeedDays, int repeatCount, int timeInterval, int likeCount, int shareCount, List<AlarmFeedImage> images, UserEntity user) {
         this.feedContent = feedContent;
         this.title = title;
         this.description = description;
         this.time = time;
         this.alarmFeedDays = alarmFeedDays;
-        this.isRepeating = isRepeating;
+        this.repeatCount = repeatCount;
+        this.timeInterval = timeInterval;
         this.likeCount = likeCount;
         this.shareCount = shareCount;
         this.images = images != null ? images : new ArrayList<>();

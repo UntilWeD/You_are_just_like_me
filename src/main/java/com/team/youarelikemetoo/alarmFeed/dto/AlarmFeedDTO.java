@@ -1,11 +1,8 @@
 package com.team.youarelikemetoo.alarmFeed.dto;
 
-import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
-import com.team.youarelikemetoo.alarm.entity.Alarm;
 import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeed;
 import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeedImage;
 import com.team.youarelikemetoo.user.entity.UserEntity;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -22,7 +19,6 @@ public class AlarmFeedDTO {
     private String feedContent;
     private List<String> imageUrls;
 
-    @Column(name= "title")
     private String title;
 
     private String description;
@@ -31,7 +27,10 @@ public class AlarmFeedDTO {
 
     private List<Integer> alarmFeedDays;
 
-    private boolean isRepeating;
+    private int repeatCount;
+
+    private int timeInterval;
+
     private int likeCount;
     private int shareCount;
 
@@ -41,7 +40,8 @@ public class AlarmFeedDTO {
                 .title(this.title)
                 .description(this.description)
                 .time(this.time)
-                .isRepeating(this.isRepeating)
+                .repeatCount(this.repeatCount)
+                .timeInterval(this.timeInterval)
                 .likeCount(this.likeCount)
                 .shareCount(this.shareCount)
                 .user(user)
@@ -64,7 +64,8 @@ public class AlarmFeedDTO {
         dto.setAlarmFeedDays(entity.getAlarmFeedDays().stream().map(
                 day -> day.getDayOfWeek()).collect(Collectors.toList())
         );
-        dto.setRepeating(dto.isRepeating);
+        dto.setTimeInterval(dto.getTimeInterval());
+        dto.setRepeatCount(dto.getRepeatCount());
         dto.setLikeCount(dto.getLikeCount());
         dto.setShareCount(dto.getShareCount());
         return dto;
