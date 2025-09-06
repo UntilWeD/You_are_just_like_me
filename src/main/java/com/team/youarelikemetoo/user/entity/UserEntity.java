@@ -42,7 +42,7 @@ public class UserEntity {
     @Column(name = "introduction")
     private String introduction;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserProfileImage userProfileImage;
 
     public void changeUserInfo(UserDTO userDTO){

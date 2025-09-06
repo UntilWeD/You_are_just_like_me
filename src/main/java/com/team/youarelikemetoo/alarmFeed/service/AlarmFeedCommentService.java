@@ -6,11 +6,13 @@ import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeed;
 import com.team.youarelikemetoo.alarmFeed.entity.AlarmFeedComment;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedCommentJpaRepository;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedJPARepository;
+import com.team.youarelikemetoo.alarmFeed.repository.mybatis.MyBatisAlarmFeedCommentRepository;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import com.team.youarelikemetoo.user.repository.UserJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +22,14 @@ public class AlarmFeedCommentService {
     private final AlarmFeedCommentJpaRepository alarmFeedCommentJpaRepository;
     private final UserJPARepository userJPARepository;
     private final AlarmFeedJPARepository alarmFeedJPARepository;
+    private final MyBatisAlarmFeedCommentRepository myBatisAlarmFeedCommentRepository;
 
 
     public AlarmFeedCommentDTO saveAlarmFeedComment(AlarmFeedCommentDTO dto, Long userId) {
         UserEntity user = userJPARepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        AlarmFeed alarmFeed = alarmFeedJPARepository.findById(dto.getAlarmFeedId())
+        AlarmFeed alarmFeed = alarmFeedJPARepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("AlarmFeed Not Found"));
 
 
@@ -59,5 +62,7 @@ public class AlarmFeedCommentService {
     }
 
 
-
+    public List<AlarmFeedCommentDTO> readAlarmFeedCommentList(Long alarmFeedId) {
+        return myBatisAlarmFeedCommentRepository.findAllAlarmFeedCommentsByAlarmFeedId(alarmFeedId);
+    }
 }

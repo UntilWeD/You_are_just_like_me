@@ -27,6 +27,8 @@ public class AlarmFeedDTO {
 
     private List<Integer> alarmFeedDays;
 
+    private AlarmFeedCommentDTO alarmFeedCommentDTO;
+
     private int repeatCount;
 
     private int timeInterval;

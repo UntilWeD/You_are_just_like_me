@@ -26,7 +26,7 @@ public class UserProfileImage {
     @Column(name = "blob_name")
     private String blobName;
 
-    @OneToOne(mappedBy = "userProfileImage", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 

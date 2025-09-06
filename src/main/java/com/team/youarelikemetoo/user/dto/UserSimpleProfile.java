@@ -1,24 +1,25 @@
 package com.team.youarelikemetoo.user.dto;
 
 import com.team.youarelikemetoo.user.entity.UserEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserSimpleProfile {
 
-    private Long id;
+    private Long userId;
     private String name;
-    private String profileImageUrl;
+    private String imageUrl;
 
     public UserSimpleProfile fromEntity(UserEntity entity){
         UserSimpleProfile dto = UserSimpleProfile.builder()
-                .id(entity.getId())
+                .userId(entity.getId())
                 .name(entity.getName())
-                .profileImageUrl(entity.getUserProfileImage().getImageUrl())
+                .imageUrl(entity.getUserProfileImage().getImageUrl())
                 .build();
 
         return dto;

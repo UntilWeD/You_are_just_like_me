@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RestController
@@ -29,11 +31,11 @@ public class AlarmFeedCommentController {
         return ResponseEntity.ok(ApiResponse.success(alarmFeedCommentDTO));
     }
 
-    @Operation(summary = "알람 피드 코멘트를 조회합니다.", description = "알람 피드 코멘트를 조회합니다.")
-    @GetMapping("/{alarmFeedCommentId}")
-    public ResponseEntity<?> getReadAlarmFeedComment(@PathVariable Long alarmFeedCommentId){
+    @Operation(summary = "해당 id의 알람피드 코멘트리스트를 조회합니다.", description = "알람 피드 코멘트 리스트를 조회합니다.")
+    @GetMapping("/{alarmFeedId}")
+    public ResponseEntity<?> getAlarmFeedCommentListRequest(@PathVariable Long alarmFeedId){
 
-        AlarmFeedCommentDTO dto = alarmFeedCommentService.readAlarmFeedComment(alarmFeedCommentId);
+        List<AlarmFeedCommentDTO> dto = alarmFeedCommentService.readAlarmFeedCommentList(alarmFeedId);
         return ResponseEntity.ok(ApiResponse.success(dto));
     }
 

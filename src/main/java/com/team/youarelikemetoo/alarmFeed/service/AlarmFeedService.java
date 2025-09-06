@@ -1,11 +1,13 @@
 package com.team.youarelikemetoo.alarmFeed.service;
 
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
+import com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedCommentDTO;
 import com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedDTO;
 import com.team.youarelikemetoo.alarmFeed.entity.*;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedJPARepository;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedLikeJpaRepository;
 import com.team.youarelikemetoo.alarmFeed.repository.AlarmFeedShareJpaRepository;
+import com.team.youarelikemetoo.alarmFeed.repository.mybatis.MyBatisAlarmFeedCommentRepository;
 import com.team.youarelikemetoo.alarmFeed.repository.mybatis.MyBatisAlarmFeedRepository;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import com.team.youarelikemetoo.user.repository.UserJPARepository;
@@ -31,6 +33,7 @@ public class AlarmFeedService {
     private final AlarmFeedLikeJpaRepository alarmFeedLikeJpaRepository;
     private final AlarmFeedShareJpaRepository alarmFeedShareJpaRepository;
     private final MyBatisAlarmFeedRepository myBatisAlarmFeedRepository;
+    private final MyBatisAlarmFeedCommentRepository myBatisAlarmFeedCommentRepository;
 
     private final AzureBlobService azureBlobService;
 
@@ -154,6 +157,12 @@ public class AlarmFeedService {
 
     public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeek(List<Integer> dayOfWeek) {
         List<AlarmFeedDTO> alarmFeeds = myBatisAlarmFeedRepository.findAlarmFeedsByDayOfWeek(dayOfWeek);
+
+        for (AlarmFeedDTO dto : alarmFeeds){
+            AlarmFeedCommentDTO commentDTO = myBatisAlarmFeedCommentRepository.findAlarmFeedCommentByAlarmFeedId(dto.getId());
+            if(commentDTO != null)
+                dto.setAlarmFeedCommentDTO(commentDTO);
+        }
 
         return alarmFeeds.stream()
                 .collect(Collectors.toList());

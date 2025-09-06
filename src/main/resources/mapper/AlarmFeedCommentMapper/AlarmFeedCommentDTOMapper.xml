@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.youarelikemetoo.alarmFeed.repository.mybatis.AlarmFeedCommentMapper">
+
+    <resultMap id="AlarmFeedCommentResultMap" type="com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedCommentDTO">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <association property="userSimpleProfile" javaType="com.team.youarelikemetoo.user.dto.UserSimpleProfile">
+            <id property="userId" column="user_id"/>
+            <result property="imageUrl" column="image_url"/>
+        </association>
+    </resultMap>
+
+
+    <select id="findAllAlarmFeedCommentsByAlarmFeedId" resultMap="AlarmFeedCommentResultMap">
+        SELECT          A.ALARM_FEED_COMMENT_ID AS id,
+                        A.CONTENT AS content,
+                        B.USER_ID AS user_id,
+                        C.IMAGE_URL AS image_url
+        FROM            ALARM_FEED_COMMENT  A
+            INNER JOIN  USER B
+                    ON  A.USER_ID = B.USER_ID
+            INNER JOIN  USER_PROFILE_IMAGE  C
+                    ON  A.USER_ID = C.USER_ID
+        WHERE A.ALARM_FEED_ID = #{alarmFeedId}
+    </select>
+    
+
+
+    <select id="findAlarmFeedCommentByAlarmFeedId" resultMap="AlarmFeedCommentResultMap">
+        SELECT          A.ALARM_FEED_COMMENT_ID AS id,
+                        A.CONTENT AS content,
+                        B.USER_ID AS user_id,
+                        C.IMAGE_URL AS image_url
+        FROM            ALARM_FEED_COMMENT  A
+                            INNER JOIN  USER B
+                                        ON  A.USER_ID = B.USER_ID
+                            INNER JOIN  USER_PROFILE_IMAGE  C
+                                        ON  A.USER_ID = C.USER_ID
+        WHERE A.ALARM_FEED_ID = #{alarmFeedId}
+        LIMIT 1;
+    </select>
+        
+        
+        
+</mapper>
+
+
