@@ -8,6 +8,7 @@ import lombok.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "alarm_feed")
 @Entity
@@ -96,5 +97,11 @@ public class AlarmFeed {
 
     public void minusShareCount(){
         this.shareCount--;
+    }
+
+    public List<Integer> extractDayOfWeeks() {
+        return alarmFeedDays.stream()
+                .map(AlarmFeedDay::getDayOfWeek)
+                .collect(Collectors.toList());
     }
 }
