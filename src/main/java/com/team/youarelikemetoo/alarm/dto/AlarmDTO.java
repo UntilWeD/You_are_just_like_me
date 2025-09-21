@@ -53,6 +53,7 @@ public class AlarmDTO {
         AlarmDTO alarmDTO = AlarmDTO.builder()
                 .title(entity.getTitle())
                 .description(entity.getDescription())
+                .category(entity.getCategory().getCategoryName())
                 .time(entity.getTime())
                 .timeLabel(entity.getTimeLabel())
                 .alarmDays(entity.getAlarmDays().stream().map(
