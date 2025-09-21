@@ -8,13 +8,17 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/alarm")
 @RequiredArgsConstructor
+@Slf4j
 public class AlarmController {
 
     private final AlarmService alarmService;
@@ -65,6 +69,15 @@ public class AlarmController {
     public ResponseEntity<?> getAlarmMessageRequest(@AuthenticationPrincipal CustomUserDetails user,
                                                     @RequestParam(value="time") String alarmTime){
         return alarmService.getAlarmMessage(user.getUserId(), alarmTime);
+    }
+
+    @Operation(summary = "전체 알람 리스트를 조회합니다.", description = "카테고리에 따라 알람리스트를 조회합니다.")
+    @GetMapping("/category")
+    public ResponseEntity<?> getAlarmList(@AuthenticationPrincipal CustomUserDetails user){
+        log.info("알람리스트조회 실행");
+        List<AlarmDTO> dtoList = alarmService.getAlarmList(user.getUserId());
+
+        return ResponseEntity.ok(com.team.youarelikemetoo.global.util.ApiResponse.success(dtoList));
     }
 
 

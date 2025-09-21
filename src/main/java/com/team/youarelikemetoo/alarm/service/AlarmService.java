@@ -6,6 +6,7 @@ import com.team.youarelikemetoo.alarm.entity.*;
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
 import com.team.youarelikemetoo.alarm.repository.CategoryJPARepository;
 import com.team.youarelikemetoo.alarm.repository.mybatis.MyBatisAlarmMessageRepository;
+import com.team.youarelikemetoo.auth.dto.CustomUserDetails;
 import com.team.youarelikemetoo.global.annotation.LogExecutionTime;
 import com.team.youarelikemetoo.global.util.ApiResponse;
 import com.team.youarelikemetoo.user.entity.UserEntity;
@@ -141,5 +142,18 @@ public class AlarmService {
         }
 
         return messages;
+    }
+
+    public List<AlarmDTO> getAlarmList(Long userId) {
+
+        UserEntity user = userJPARepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+        List<AlarmDTO> dtoList = alarmJPARepository.findAllByUser(user).stream()
+                .map(AlarmDTO::fromEntity)
+                .toList();
+
+        return dtoList;
     }
 }
