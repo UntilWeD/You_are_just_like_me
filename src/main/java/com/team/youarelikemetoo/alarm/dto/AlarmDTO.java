@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Getter
 @ToString
 public class AlarmDTO {
+    private Long id;
 
     private String title;
 
@@ -51,6 +52,7 @@ public class AlarmDTO {
 
     public static AlarmDTO fromEntity(Alarm entity){
         AlarmDTO alarmDTO = AlarmDTO.builder()
+                .id(entity.getId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
                 .category(entity.getCategory().getCategoryName())
