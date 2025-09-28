@@ -82,8 +82,8 @@ public class AlarmFeedController {
     @Operation(summary = "해당 Id의 알람 피드에 좋아요 횟수를 증가시킵니다.", description = "요청한 id의 알람피드에 대한 좋아요 기록을 저장합니다.")
     @GetMapping("/{alarmFeedId}/like")
     public ResponseEntity<?> getLikeAlarmFeedRequest(@PathVariable Long alarmFeedId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        alarmFeedService.addAlarmFeedLike(alarmFeedId, customUserDetails.getUserId());
-        return ResponseEntity.ok(ApiResponse.success(  alarmFeedId + " 의 좋아요 변경사항이 적용되었습니다."));
+        boolean result = alarmFeedService.addAlarmFeedLike(alarmFeedId, customUserDetails.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
 

@@ -109,9 +109,9 @@ public class AlarmFeedService {
     }
 
     @Transactional
-    public void addAlarmFeedLike(Long alarmFeedId, Long userId) {
+    public boolean addAlarmFeedLike(Long alarmFeedId, Long userId) {
         Optional<AlarmFeedLike> alarmFeedLike = alarmFeedLikeJpaRepository.findAlarmFeedLikeByAlarmFeed_IdAndUser_Id(alarmFeedId, userId);
-
+        boolean result = true;
         AlarmFeed alarmFeed = alarmFeedJPARepository.findById(alarmFeedId)
                 .orElseThrow(() -> new RuntimeException("AlarmFeed not found"));
 
@@ -129,8 +129,10 @@ public class AlarmFeedService {
         } else{
             alarmFeedLikeJpaRepository.delete(alarmFeedLike.get());
             alarmFeed.minusLikeCount();
+            result = false;
         }
 
+        return result;
     }
 
     public boolean shareAlarmFeed(Long alarmFeedId, Long userId) {
