@@ -164,7 +164,7 @@ public class AlarmFeedService {
         // 2. 공유한 사용자에게 공유한 알람피드의 정보를 바탕으로 알람저장
         //  2-1. 해당 알람이 이미 알람리스트에 존재하는지 확인
         Alarm sharedAlarm = alarmJPARepository.findByAlarmFeedId(alarmFeedId);
-        if(sharedAlarm == null){
+        if(result != false && sharedAlarm == null){
 
             AlarmDTO temp = AlarmDTO.builder()
                     .title(alarmFeed.getTitle())
@@ -178,7 +178,8 @@ public class AlarmFeedService {
                     .build();
             alarmService.saveAlarm(temp, userId);
         } else {
-            alarmJPARepository.delete(sharedAlarm);
+            if(sharedAlarm != null)
+                alarmJPARepository.delete(sharedAlarm);
         }
         return result;
     }
