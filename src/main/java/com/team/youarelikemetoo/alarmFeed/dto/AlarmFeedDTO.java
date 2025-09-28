@@ -36,6 +36,8 @@ public class AlarmFeedDTO {
     private int likeCount;
     private int shareCount;
 
+    private String userProfileImage;
+
     public AlarmFeed toEntity(UserEntity user){
         AlarmFeed alarmFeed = AlarmFeed.builder()
                 .feedContent(this.feedContent)

@@ -200,6 +200,14 @@ public class AlarmFeedService {
     public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeekAndUserId(List<Integer> dayOfWeek, Long userId) {
         List<AlarmFeedDTO> alarmFeeds = myBatisAlarmFeedRepository.findAlarmFeedsByDayOfWeekAndUserId(dayOfWeek, userId);
 
+        for (AlarmFeedDTO dto : alarmFeeds){
+            AlarmFeedCommentDTO commentDTO = myBatisAlarmFeedCommentRepository.findAlarmFeedCommentByAlarmFeedId(dto.getId());
+            if(commentDTO != null)
+                dto.setAlarmFeedCommentDTO(commentDTO);
+        }
+
+
+
         return alarmFeeds.stream()
                 .collect(Collectors.toList());
     }
