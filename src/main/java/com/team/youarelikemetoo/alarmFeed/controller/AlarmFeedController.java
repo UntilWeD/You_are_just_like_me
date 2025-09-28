@@ -91,8 +91,8 @@ public class AlarmFeedController {
     @Operation(summary = "해당 Id의 알람 피드를 공유합니다.", description = "요청한 id의 알람피드를 공유하고 공유 기록을 저장합니다. ")
     @GetMapping("/{alarmFeedId}/share")
     public ResponseEntity<?> getShareAlarmFeedRequest(@PathVariable Long alarmFeedId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        alarmFeedService.shareAlarmFeed(alarmFeedId, customUserDetails.getUserId());
-        return ResponseEntity.ok(ApiResponse.success(  alarmFeedId + " 의 좋아요 변경사항이 적용되었습니다."));
+        boolean result = alarmFeedService.shareAlarmFeed(alarmFeedId, customUserDetails.getUserId());
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 
 

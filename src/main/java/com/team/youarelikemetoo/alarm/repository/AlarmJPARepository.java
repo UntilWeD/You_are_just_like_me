@@ -14,5 +14,6 @@ public interface AlarmJPARepository extends JpaRepository<Alarm, Long> {
 
     public Optional<Alarm> findById(Long alarmId);
     public List<Alarm> findAllByUser(UserEntity user);
+    public Alarm findByAlarmFeedId(Long alarmFeedId);
 
 }

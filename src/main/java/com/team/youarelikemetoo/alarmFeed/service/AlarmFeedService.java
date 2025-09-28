@@ -1,6 +1,7 @@
 package com.team.youarelikemetoo.alarmFeed.service;
 
 import com.team.youarelikemetoo.alarm.dto.AlarmDTO;
+import com.team.youarelikemetoo.alarm.entity.Alarm;
 import com.team.youarelikemetoo.alarm.repository.AlarmJPARepository;
 import com.team.youarelikemetoo.alarm.service.AlarmService;
 import com.team.youarelikemetoo.alarmFeed.dto.AlarmFeedCommentDTO;
@@ -132,7 +133,8 @@ public class AlarmFeedService {
 
     }
 
-    public void shareAlarmFeed(Long alarmFeedId, Long userId) {
+    public boolean shareAlarmFeed(Long alarmFeedId, Long userId) {
+        boolean result = true;
         // 1. 알람피드 쉐어 엔터티 생성 후 저장
         Optional<AlarmFeedShare> alarmFeedShare = alarmFeedShareJpaRepository
                 .findAlarmFeedShareByAlarmFeed_IdAndUser_Id(alarmFeedId, userId);
@@ -154,21 +156,29 @@ public class AlarmFeedService {
         } else{
             alarmFeedShareJpaRepository.delete(alarmFeedShare.get());
             alarmFeed.minusShareCount();
+            result = false;
         }
 
         // 2. 공유한 사용자에게 공유한 알람피드의 정보를 바탕으로 알람저장
-        AlarmDTO temp = AlarmDTO.builder()
-                .title(alarmFeed.getTitle())
-                .description(alarmFeed.getDescription())
-                .category("공부")
-                .time(alarmFeed.getTime())
-                .timeInterval(alarmFeed.getTimeInterval())
-                .repeatCount(alarmFeed.getRepeatCount())
-                .alarmDays(alarmFeed.extractDayOfWeeks())
-                .build();
-        alarmService.saveAlarm(temp, userId);
+        //  2-1. 해당 알람이 이미 알람리스트에 존재하는지 확인
+        Alarm sharedAlarm = alarmJPARepository.findByAlarmFeedId(alarmFeedId);
+        if(sharedAlarm == null){
 
-        return;
+            AlarmDTO temp = AlarmDTO.builder()
+                    .title(alarmFeed.getTitle())
+                    .description(alarmFeed.getDescription())
+                    .category("공부")
+                    .time(alarmFeed.getTime())
+                    .timeInterval(alarmFeed.getTimeInterval())
+                    .repeatCount(alarmFeed.getRepeatCount())
+                    .alarmDays(alarmFeed.extractDayOfWeeks())
+                    .alarmFeedId(alarmFeedId)
+                    .build();
+            alarmService.saveAlarm(temp, userId);
+        } else {
+            alarmJPARepository.delete(sharedAlarm);
+        }
+        return result;
     }
 
     public List<AlarmFeedDTO> getAlarmFeedsByDayOfWeek(List<Integer> dayOfWeek) {

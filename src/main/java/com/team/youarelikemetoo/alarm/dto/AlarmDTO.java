@@ -35,6 +35,7 @@ public class AlarmDTO {
 
     private int repeatCount;
     private int timeInterval;
+    private Long alarmFeedId;
 
     public Alarm toEntity(UserEntity user, Category category){
         Alarm alarm = Alarm.builder()
@@ -46,6 +47,7 @@ public class AlarmDTO {
                 .timeLabel(TimeLabel.from(time))
                 .repeatCount(this.repeatCount)
                 .timeInterval(this.timeInterval)
+                .alarmFeedId(this.alarmFeedId)
                 .build();
         return alarm;
     }

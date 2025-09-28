@@ -53,9 +53,12 @@ public class Alarm {
     @Column(name = "time_interval")
     private int timeInterval;
 
+    @Column(name = "alarm_feed_id")
+    private Long alarmFeedId;
+
     @Builder
     public Alarm(Category category, UserEntity user, String title, String description, LocalTime time, TimeLabel timeLabel,
-                 List<AlarmDay> alarmDays, int repeatCount, int timeInterval) {
+                 List<AlarmDay> alarmDays, int repeatCount, int timeInterval, Long alarmFeedId) {
         this.category = category;
         this.user = user;
         this.title = title;
@@ -65,6 +68,7 @@ public class Alarm {
         this.alarmDays = alarmDays;
         this.repeatCount = repeatCount;
         this.timeInterval = timeInterval;
+        this.alarmFeedId = alarmFeedId;
     }
 
 
