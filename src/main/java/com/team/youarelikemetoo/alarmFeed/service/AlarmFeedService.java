@@ -135,6 +135,7 @@ public class AlarmFeedService {
         return result;
     }
 
+    @Transactional
     public boolean shareAlarmFeed(Long alarmFeedId, Long userId) {
         boolean result = true;
         // 1. 알람피드 쉐어 엔터티 생성 후 저장
@@ -156,6 +157,7 @@ public class AlarmFeedService {
             alarmFeedShareJpaRepository.save(entity);
             alarmFeed.addShareCount();
         } else{
+            log.info("알람피드 공유 횟수 감소");
             alarmFeedShareJpaRepository.delete(alarmFeedShare.get());
             alarmFeed.minusShareCount();
             result = false;
