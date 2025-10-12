@@ -68,10 +68,21 @@ public class AlarmFeedController {
 
     @Operation(summary = "요일에 따라 해당하는 내 알람피드들을 반환합니다.",
             description = "해당하는 요일 리스트와 jwt토큰으로부터 userId를 추출하여 그 값들을 기반으로 알람피드들을 조회하여 반환합니다.")
-    @GetMapping("/by-day-userId")
+    @GetMapping("/by-day-current")
     public ResponseEntity<?> getMyAlarmFeedByDayOfWeekAndUserIdRequest(@RequestParam(required = false)  List<Integer> days,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeekAndUserId(days, customUserDetails.getUserId());
+
+
+        return ResponseEntity.ok(ApiResponse.success(alarmFeedDTOS));
+    }
+
+    @Operation(summary = "요일에 따라 해당하는 특정 id의 알람피드들을 반환합니다.",
+            description = "해당하는 요일 리스트와 userId으로부터 userId를 추출하여 그 값들을 기반으로 알람피드들을 조회하여 반환합니다.")
+    @GetMapping("/by-day-userId")
+    public ResponseEntity<?> getMyAlarmFeedByDayOfWeekAndUserIdRequest(@RequestParam(required = false)  List<Integer> days,
+                                                                       @RequestParam(required = true)   Long userId) {
+        List<AlarmFeedDTO> alarmFeedDTOS = alarmFeedService.getAlarmFeedsByDayOfWeekAndUserId(days, userId);
 
 
         return ResponseEntity.ok(ApiResponse.success(alarmFeedDTOS));

@@ -14,7 +14,8 @@
         <result property="timeInterval" column="time_interval"/>
         <result property="likeCount" column="like_count"/>
         <result property="shareCount" column="share_count"/>
-        <result property="userProfileImage" column="image_url"/>
+        <result property="userProfileImage" column="user_image_url"/>
+        <result property="userId" column="user_id"/>
 
         <!-- List<String> imageUrls 매핑 -->
         <collection property="imageUrls" ofType="String">
@@ -40,12 +41,13 @@
         af.share_count,
         afi.image_url,
         afd.day_of_week,
-        upi.image_url
+        upi.image_url as user_image_url,
+        u.user_id
         FROM alarm_feed af
-        LEFT JOIN alarm_feed_image afi      ON af.alarm_feed_id         = afi.alarm_feed_id
-        LEFT JOIN alarm_feed_day afd        ON af.alarm_feed_id         = afd.alarm_feed_id
-        LEFT JOIN user u                    ON u.user_id                = af.user_id
-        LEFT JOIN user_profile_image upi    ON upi.user_profile_image_id= u.user_id
+        LEFT JOIN alarm_feed_image afi      ON af.alarm_feed_id     = afi.alarm_feed_id
+        LEFT JOIN alarm_feed_day afd        ON af.alarm_feed_id     = afd.alarm_feed_id
+        LEFT JOIN user u                    ON u.user_id            = af.user_id
+        LEFT JOIN user_profile_image upi    ON upi.user_id          = u.user_id
         <where>
             <if test="dayOfWeek != null and dayOfWeek.size() > 0">
                 AND (afd.day_of_week IS NULL OR afd.day_of_week IN
@@ -70,12 +72,13 @@
         af.share_count,
         afi.image_url,
         afd.day_of_week,
-        upi.image_url
+        upi.image_url as user_image_url,
+        u.user_id
         FROM alarm_feed af
-        LEFT JOIN alarm_feed_image afi ON af.alarm_feed_id = afi.alarm_feed_id
-        LEFT JOIN alarm_feed_day afd ON af.alarm_feed_id = afd.alarm_feed_id
+        LEFT JOIN alarm_feed_image afi      ON af.alarm_feed_id = afi.alarm_feed_id
+        LEFT JOIN alarm_feed_day afd        ON af.alarm_feed_id = afd.alarm_feed_id
         LEFT JOIN user u                    ON u.user_id                = af.user_id
-        LEFT JOIN user_profile_image upi    ON upi.user_profile_image_id= u.user_id
+        LEFT JOIN user_profile_image upi    ON upi.user_id  = u.user_id
         <where>
             af.user_id = #{userId}
             <if test="dayOfWeek != null and dayOfWeek.size() > 0">

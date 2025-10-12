@@ -26,12 +26,20 @@ public class UserController {
     private final UserService userService;
 
     // url 고쳐야함
-    @Operation(summary = "유저의 정보를 조회합니다.", description = "사용자의 OAuth2아이디를 기반으로 사용자정보를 조회하여 반환합니다.")
+    @Operation(summary = "나의 유저의 정보를 조회합니다.", description = "사용자의 OAuth2아이디를 기반으로 사용자정보를 조회하여 반환합니다.")
     @GetMapping("/current")
     public ResponseEntity<?> getCurrentUserInfo(@AuthenticationPrincipal CustomUserDetails user){
         String oauthId = user.getOauthId();
-        return userService.getUserInfo(oauthId);
+        return userService.getUserInfoByOauthId(oauthId);
     }
+
+
+    @Operation(summary = "특정 id의 유저의 정보를 조회합니다.", description = "특정 사용자의 OAuth2아이디를 기반으로 사용자정보를 조회하여 반환합니다.")
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserInfo(@PathVariable Long userId){
+        return userService.getUserInfoByUserId(userId);
+    }
+
 
     // url 고쳐야함 {userId}
     @PostMapping("/save")

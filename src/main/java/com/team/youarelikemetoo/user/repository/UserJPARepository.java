@@ -1,6 +1,7 @@
 package com.team.youarelikemetoo.user.repository;
 
 import com.team.youarelikemetoo.user.entity.UserEntity;
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +15,6 @@ public interface UserJPARepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM UserEntity u LEFT JOIN FETCH u.userProfileImage WHERE u.oauthId = :oauthId")
     Optional<UserEntity> findByOauthId(@Param("oauthId") String oauthId);
     Optional<UserEntity> findByOauthIdAndOauthProvider(String id, String oauthProvider);
+    Optional<UserEntity> findById(Long id);
 
 }

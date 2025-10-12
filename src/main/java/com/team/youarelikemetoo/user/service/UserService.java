@@ -30,9 +30,19 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> getUserInfo(String oauthId){
+    public ResponseEntity<?> getUserInfoByOauthId(String oauthId){
         log.info(oauthId);
         UserEntity user = userJPARepository.findByOauthId(oauthId)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+
+        return ResponseEntity.ok(ApiResponse.success(UserDTO.fromEntity(user)));
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getUserInfoByUserId(Long userId){
+
+        UserEntity user = userJPARepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
 

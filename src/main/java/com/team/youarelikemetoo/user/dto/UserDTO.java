@@ -11,6 +11,7 @@ import lombok.Setter;
 @Builder
 public class UserDTO {
 
+    private Long userId;
     private String name;
     private String oauthProvider;
     private String oauthId;
@@ -51,6 +52,7 @@ public class UserDTO {
     // 유저 프로파일 이미지가 있을 시에 동적으로 변환되도록 해야함
     static public UserDTO fromEntity(UserEntity user){
         return UserDTO.builder()
+                .userId(user.getId())
                 .oauthId(user.getOauthId())
                 .oauthProvider(user.getOauthProvider())
                 .name(user.getName())

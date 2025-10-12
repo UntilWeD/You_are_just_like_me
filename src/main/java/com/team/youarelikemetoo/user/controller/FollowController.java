@@ -57,6 +57,7 @@ public class FollowController {
     public ResponseEntity<?> getFollowingRecommendation(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         List<UserSimpleProfile> followingRecommendations = followService.getFollowingRecommendation(customUserDetails.getUserId());
 
+
         return ResponseEntity.ok(ApiResponse.success(followingRecommendations));
     }
 

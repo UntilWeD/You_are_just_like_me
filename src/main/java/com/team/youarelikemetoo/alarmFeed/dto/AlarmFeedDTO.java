@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class AlarmFeedDTO {
 
     private Long id;
+    private Long userId;
     private String feedContent;
     private List<String> imageUrls;
 
