@@ -1,4 +1,4 @@
-package com.team.youarelikemetoo.alarmFeed.service;
+package com.team.youarelikemetoo.user.service;
 
 import com.team.youarelikemetoo.user.dto.UserSimpleProfile;
 import com.team.youarelikemetoo.user.repository.FollowJpaRepository;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,21 +19,23 @@ public class FollowService {
     private final MyBatisFollowRepository myBatisFollowRepository;
 
     @Transactional
-    public void follow(Long followerId, Long followingId) {
+    public boolean follow(Long followerId, Long followingId) {
         if(followerId.equals(followingId))
             throw new RuntimeException("자기 자신은 팔로우할 수 없습니다.");
+        boolean result = true;
+        Optional<Follow> existedFollow = followJpaRepository.findByFollowerIdAndFollowingId(followerId, followingId);
 
-        if(!followJpaRepository.existsByFollowerIdAndFollowingId(followerId, followingId)){
+        if(existedFollow.isEmpty()){
             followJpaRepository.save(Follow.builder()
                             .followerId(followerId)
                             .followingId(followingId)
                     .build());
+        } else {
+            result = false;
+            followJpaRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
         }
-    }
 
-    @Transactional
-    public void unfollow(Long followerId, Long unfollowingId) {
-        followJpaRepository.deleteByFollowerIdAndFollowingId(followerId, unfollowingId);
+        return result;
     }
 
     public List<UserSimpleProfile> getFollowingUsers(Long userId) {

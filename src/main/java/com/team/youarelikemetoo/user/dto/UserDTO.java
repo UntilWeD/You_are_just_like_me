@@ -23,6 +23,7 @@ public class UserDTO {
     private String instagramId;
     private String introduction;
     private String profileImageUrl;
+    private boolean follow;
 
 
 
@@ -68,6 +69,7 @@ public class UserDTO {
                 )
                 .instagramId(user.getInstagramId())
                 .introduction(user.getIntroduction())
+                .follow(false)
                 .build();
     }
 

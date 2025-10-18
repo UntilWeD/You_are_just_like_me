@@ -6,12 +6,12 @@
 
     <select id="findFollowerAsUserSimpleProfileByFollowerId" resultType="UserSimpleProfile">
         SELECT
-            u.user_id AS id, u.name, i.image_url
+            u.user_id, u.name, i.image_url
         FROM follow f
                  INNER JOIN user u
-                            ON f.following_id = u.user_id
+                         ON f.following_id = u.user_id
                  LEFT JOIN user_profile_image i
-                           ON u.user_id = i.user_id
+                        ON u.user_id = i.user_id
         WHERE f.follower_id = #{followerId};
     </select>
 

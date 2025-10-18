@@ -15,6 +15,7 @@ public class UserSimpleProfile {
     private String name;
     private String imageUrl;
 
+
     public UserSimpleProfile fromEntity(UserEntity entity){
         UserSimpleProfile dto = UserSimpleProfile.builder()
                 .userId(entity.getId())

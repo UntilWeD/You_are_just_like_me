@@ -35,9 +35,11 @@ public class UserController {
 
 
     @Operation(summary = "특정 id의 유저의 정보를 조회합니다.", description = "특정 사용자의 OAuth2아이디를 기반으로 사용자정보를 조회하여 반환합니다.")
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserInfo(@PathVariable Long userId){
-        return userService.getUserInfoByUserId(userId);
+    @GetMapping("/{targetId}")
+    public ResponseEntity<?> getUserInfo(@PathVariable Long targetId, @AuthenticationPrincipal CustomUserDetails user){
+        UserDTO dto =  userService.getUserInfoByUserId(targetId, user.getUserId());
+
+        return ResponseEntity.ok(ApiResponse.success(dto));
     }
 
 

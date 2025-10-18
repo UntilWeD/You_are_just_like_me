@@ -3,8 +3,10 @@ package com.team.youarelikemetoo.user.service;
 import com.team.youarelikemetoo.alarmFeed.service.AzureBlobService;
 import com.team.youarelikemetoo.global.util.ApiResponse;
 import com.team.youarelikemetoo.user.dto.UserDTO;
+import com.team.youarelikemetoo.user.entity.Follow;
 import com.team.youarelikemetoo.user.entity.UserEntity;
 import com.team.youarelikemetoo.user.entity.UserProfileImage;
+import com.team.youarelikemetoo.user.repository.FollowJpaRepository;
 import com.team.youarelikemetoo.user.repository.UserJPARepository;
 import com.team.youarelikemetoo.user.repository.UserProfileImageJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -27,6 +30,7 @@ public class UserService {
     private final UserJPARepository userJPARepository;
     private final UserProfileImageJpaRepository userProfileImageJpaRepository;
     private final AzureBlobService azureBlobService;
+    private final FollowJpaRepository followJpaRepository;
 
 
     @Transactional(readOnly = true)
@@ -39,14 +43,21 @@ public class UserService {
         return ResponseEntity.ok(ApiResponse.success(UserDTO.fromEntity(user)));
     }
 
-    @Transactional(readOnly = true)
-    public ResponseEntity<?> getUserInfoByUserId(Long userId){
+    @Transactional
+    public UserDTO getUserInfoByUserId(Long targetId,Long userId){
 
-        UserEntity user = userJPARepository.findById(userId)
+        UserEntity user = userJPARepository.findById(targetId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
+        UserDTO dto = UserDTO.fromEntity(user);
 
-        return ResponseEntity.ok(ApiResponse.success(UserDTO.fromEntity(user)));
+        Optional<Follow> follow = followJpaRepository.findByFollowerIdAndFollowingId(userId, targetId);
+        if(follow.isPresent()){
+            dto.setFollow(true);
+        }
+
+
+        return dto;
     }
 
     @Transactional
